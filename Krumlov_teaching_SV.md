@@ -3,10 +3,10 @@
 ***
 Lead: Fritz J Sedlazeck
 
-Human Genome Sequencing Center
+Human Genome Sequencing Center,
 Baylor College of Medicine
 
-Computer Science Department
+Computer Science Department,
 Rice Univeristy 
 ***
 
@@ -15,7 +15,7 @@ The goal of this module is to get you familiarized with variant identification (
 For Structural Variations (SVs) detection we will be usinig mutliple methods (Assemblytics, Manta, Sniffles) and then later compare them across to obtain more insights about advantages and disadvantes across the differnet approaches.
 
 ### The main steps in this Module are:
-1. Assembly based SV detection (using Assemblytics).
+1. Assembly based SV detection (using ([Assemblytics](http://assemblytics.com/))).
 2. Short read mapping based SV detection (using ([Manta](https://github.com/Illumina/manta))). 
 3. Long read based mapping based SV detection (using ([Sniffles](https://github.com/fritzsedlazeck/Sniffles))). 
 4. SV comparison (using ([Sniffles](https://github.com/fritzsedlazeck/SURVIVOR)))
@@ -24,4 +24,130 @@ For Structural Variations (SVs) detection we will be usinig mutliple methods (As
 We will utilize data from Cryptosporidium for our exercise. Cryptosporidium is a microscopic parasite that causes the diarrheal disease cryptosporidiosis. Both the parasite and the disease are commonly known as “Crypto.” There are many species of Cryptosporidium that infect animals, some of which also infect humans.
 The data is from a recent publication in Gigascience: [Fully resolved assembly of Cryptosporidium parvum](https://doi.org/10.1093/gigascience/giac010). Here we produced short read Illumina data together wiht Oxford Nanopore long read data to obtain a fully assembled (T2T) assembly and thus improve the reference overall. 
 We will study this sample of Cryptosporidium compared to the previously available reference sequence (GCF_000165345.1.). 
+
+
+## Part 1: Assembly based SV detection 
+As discussed in the lecture, assembly based SV detection is quite comprehesnive. Nevertheless, before we start we need to align a new assembly to an existing e.g. reference genome to identify structural differences. For this we will be using MUMmer (nucmer). Alternatively you could also utilize Dipcall as a program especially if you have a phased assembly at hand. MUMmer is a commonly used package that allows you to rapidly compare two sequences together and includes multiple packages for summary reports over the aligned sequences. This includes variant reporting, coordiante reporting or even the generation of dotplots. As shown in the lecture dotplot is very helpful and intuitive method to copmare sequences for us. 
+
+
+To begin to call variants we need to first compare the reference to our assembly. 
+Make sure you are in a folder that is owned by you and lets set up the directory structure:
+```
+mkdir SV_comparison
+mkdir SV_comparison/assembly_comp
+cd  SV_comparison/assembly_comp
+```
+
+Next we take assembly and reference there: (NOTE! the workshop organizers might have orgaized the data already for you)
+```
+wget 
+```
+
+Now we can initiate the alignment:
+```
+nucmer -maxmatch -l 100 -c 500 GCF_000165345.1.fa crypto_BCM2021_v2_min100k_rename.fasta
+```
+
+We can now switch over to ([Assemblytics](http://assemblytics.com/)). For simplicity I have created a session for us, otherwise you can try to download and upload your out.delta file. I will show and explain the different plots and outputs available. 
+
+Here is the link: [http://assemblytics.com/analysis.php?code=r2WN5OvWWASgQeOlUg3c](http://assemblytics.com/analysis.php?code=r2WN5OvWWASgQeOlUg3c).
+
+To convert the assemblytics file for SV we will need SURVIVOR:
+```
+SURVIVOR convertAssemblytics  user_data/r2WN5OvWWASgQeOlUg3c/my_favorite_organism.Assemblytics_structural_variants.bed 50 assemblytics.vcf
+```
+
+You can also download that VCF file from here if you had any difficulties:
+```
+ wget 
+```
+
+Lets count how many SV we could identify: 
+```
+zgrep -vc '#' diploidSV.vcf.gz
+```
+
+
+## Part 2: Illumina based SV detection 
+### 0. Preping the files:
+You might need to index the refernece and the bam file that we provided to you:
+```
+samtools faidx ../GCF_000165345.1.fa
+samtools index our_refCrypto_reads.sort.bam
+```
+
+### 1. Initiate the run:
+Next we initiate the Manta run:
+```
+configManta.py --bam= our_refCrypto_reads.sort.bam --referenceFasta=../GCF_000165345.1.fa  --runDir=Out_Manta
+```
+This should just take seconds as it initiates the folder structure and specifies for the subsequent process to use our mapped reads and our reference file. In addition, we specify the output to be written in `Out_Manta`
+
+### 2. Run the analysis:
+```
+python Out_Manta/runWorkflow.py -j 2 -m local -g 10
+```
+
+This will launch the Manta pipeline that we previously configured. `-j` specifies the number of CPU threads (2 in our case), `-m` local indicates that it should not try to run things on different nodes or instances and `-g 30` specifies the available memory for the process in GB.
+
+Manta now searches for abnormal paired-end reads and split-reads across our mapped reads. These will be analyzed together and clustered to identify SV in these samples. After ~2-3 minutes you should see that the program has finished.
+
+Our SV calling results can be found here (Out_Manta/results/variants/). Let us open quickly the output of the highest quality SV files:
+```
+cd  Out_Manta/results/variants/
+ls 
+```
+As you can see we have multiple VCF files. These represent the different stages of Manta and the confidence level for the SV calls. We typically use the `diploidSV.vcf.gz` file.
+
+
+Let us open quickly the output of the highest quality SV files:
+```
+less diploidSV.vcf.gz
+
+```
+
+We can see that the type we identified are BND. 
+
+Lets count how many SV we could identify: 
+```
+zgrep -vc '#' diploidSV.vcf.gz
+```
+
+## Part 3: Assembly based SV detection 
+Finally we are ready for the Oxford Nanopore detection using sniffles. For this use the "ont_mapped.sort.bam" file that I have previously mapped using minimap2. Using Sniffles v2 this should be a simple command like:
+```
+sniffles -iont_prev.sort.bam -v sniffles.vcf
+```
+
+Next we can inspect the file with e.g.:
+```
+less -S sniffles.vcf
+```
+or 
+```
+grep -vc '#' sniffles.vcf
+```
+
+How many SV did you detect? 
+
+## Part 4: Structural Variant comparison
+Now that we generated Assembly, Illumina  and ONT based SV calls it is time to compare them. One tool that you can use for this very easily is SURVIVOR. SURVIVOR is a very simple method to compare SV but also includes multiple other methods that might be useful. Also feel free to check out Truvari, which is one of our newest methods to compare SV. When comparing SV it is quite important to take mutliple things into considerations. Feel free to ask if you want to discuss certain points more. 
+
+For SURVIVOR we want to use the merge option. Before doing this, the merge option requires a file including all paths and VCF files that you want to compare. Thus, we generate the file like this:
+```
+ls sniffles.vcf > vcf_files
+ls assemblytics.vcf >> vcf_files
+ls illumina.vcf >> vcf_files
+```
+
+Next we can initiate the compare:
+```
+SURVIVOR merge vcf_files 1000 1 1 0 0 50 sample_merged.vcf
+```
+Lets check how good/bad the overlap is:
+```
+perl -ne 'print "$1\n" if /SUPP_VEC=([^,;]+)/'  sample_merged.vcf | sort | uniq -c 
+```
+
+As you can see you will get the pattern and the number of times the pattern occurs. The first number is the number of times it can be observed in the VCF file. The 2nd number is the pattern (0 or 1 depending if it was observed or not) 
 
