@@ -15,10 +15,10 @@ The goal of this module is to get you familiarized with variant identification (
 For Structural Variations (SVs) detection we will be using multiple methods (Assemblytics, Manta, Sniffles) and then later compare them across to obtain more insights about advantages and disadvantages across the different the differnet approaches.
 
 ### The main steps in this Module are:
-1. Assembly based SV detection (using ([Assemblytics](http://assemblytics.com/))).
-2. Short read mapping based SV detection (using ([Manta](https://github.com/Illumina/manta))). 
-3. Long read based mapping based SV detection (using ([Sniffles](https://github.com/fritzsedlazeck/Sniffles))). 
-4. SV comparison (using ([SURVIVOR](https://github.com/fritzsedlazeck/SURVIVOR)))
+1. Assembly based SV detection (using [Assemblytics](http://assemblytics.com/))
+2. Short read mapping based SV detection (using [Manta](https://github.com/Illumina/manta))
+3. Long read based mapping based SV detection (using [Sniffles](https://github.com/fritzsedlazeck/Sniffles))
+4. SV comparison (using [SURVIVOR](https://github.com/fritzsedlazeck/SURVIVOR))
 
 ## Organism
 We will utilize data from Cryptosporidium for our exercise. Cryptosporidium is a microscopic parasite that causes the diarrheal disease cryptosporidiosis. Both the parasite and the disease are commonly known as “Crypto.” There are many species of Cryptosporidium that infect animals, some of which also infect humans.
