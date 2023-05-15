@@ -101,7 +101,9 @@ As you can see, we have multiple VCF files. These represent the different stages
 
 Let us open quickly the output of the highest quality SV files:
 ```
-less diploidSV.vcf.gz
+gunzip diploidSV.vcf.gz
+mv  diploidSV.vcf illumina.vcf
+less illumina.vcf
 
 ```
 
@@ -109,13 +111,13 @@ We can see that the type we identified are BND.
 
 Lets count how many SV we could identify: 
 ```
-zgrep -vc '#' diploidSV.vcf.gz
+zgrep -vc '#' illumina.vcf
 ```
 
 ## Part 3: Assembly based SV detection 
 Finally we are ready for the Oxford Nanopore detection using sniffles. For this use the "ont_mapped.sort.bam" file that I have previously mapped using minimap2. Using Sniffles v2 this should be a simple command like:
 ```
-sniffles -iont_prev.sort.bam -v sniffles.vcf
+sniffles -i ont_prev.sort.bam -v sniffles.vcf
 ```
 
 Next we can inspect the file with e.g.:
