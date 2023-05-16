@@ -144,7 +144,7 @@ Using Sniffles v2 this should be a simple command like:
 
 ```
 samtools index ont_prev.sort.bam
-sniffles -i ont_prev.sort.bam -v sniffles.vcf
+/home/genomics/.local/bin/sniffles -i ont_prev.sort.bam -v sniffles.vcf
 ```
 
 You can also download the file from here if you had issues:
