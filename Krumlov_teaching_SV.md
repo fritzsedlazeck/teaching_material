@@ -111,10 +111,13 @@ Let us open quickly the output of the highest quality SV files:
 gunzip diploidSV.vcf.gz
 mv  diploidSV.vcf illumina.vcf
 less illumina.vcf
-
 ```
 
-We can see that the type we identified are BND. 
+You can get the file here if you had difficulties:
+```
+wget https://www.dropbox.com/s/wcro3nzkird5nx8/illumina.vcf?dl=0
+mv illumina.vcf?dl=0 illumina.vcf
+```
 
 Lets count how many SV we could identify: 
 ```
