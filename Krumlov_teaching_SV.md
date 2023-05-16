@@ -35,7 +35,8 @@ As discussed in the lecture, assembly based SV detection is quite comprehensive.
 To begin to call variants we need to first compare the reference to our assembly. 
 Next, we take assembly and reference there: (NOTE! the workshop organizers might have organized the data already for you)
 ```
-wget 
+wget https://www.dropbox.com/s/uqldg7ir8qzg6ty/GCF_000165345.1.fa?dl=0
+wget https://www.dropbox.com/s/1f9e65k34r80rvd/crypto_BCM2021_v2_min100k_rename.fasta?dl=0 
 ```
 
 Now we can initiate the alignment:
@@ -54,7 +55,7 @@ SURVIVOR convertAssemblytics  user_data/r2WN5OvWWASgQeOlUg3c/my_favorite_organis
 
 You can also download that VCF file from here if you had any difficulties:
 ```
- wget 
+ wget https://www.dropbox.com/s/jm0e6mbrqggwl7g/assemblytics.vcf?dl=0
 ```
 
 Lets count how many SV we could identify: 
@@ -64,14 +65,16 @@ zgrep -vc '#' diploidSV.vcf.gz
 
 
 ## Part 2: Illumina based SV detection 
-### 0. Preping the files:
+In this part we will use Manta to interpret the signals we can obtain from abnormally mapped paired end Illumina reads. 
 
-Again you might get the file already on your profile or you can download from here:
+Again you might get the file already on your account or you can download from here:
+```
+wget https://www.dropbox.com/s/1mjb0tjbtmrcugj/our_refCrypto_reads.sort.bam?dl=0
+```
 
-wget 
 You might need to index the reference and the bam file that we provided to you:
 ```
-samtools faidx ../GCF_000165345.1.fa
+samtools faidx GCF_000165345.1.fa
 samtools index our_refCrypto_reads.sort.bam
 ```
 
@@ -115,9 +118,22 @@ zgrep -vc '#' illumina.vcf
 ```
 
 ## Part 3: Assembly based SV detection 
-Finally we are ready for the Oxford Nanopore detection using sniffles. For this use the "ont_mapped.sort.bam" file that I have previously mapped using minimap2. Using Sniffles v2 this should be a simple command like:
+Finally we are ready for the Oxford Nanopore detection using sniffles. For this use the "ont_mapped.sort.bam" file that I have previously mapped using minimap2. 
+You might have that file on your account, but if not you can download it here:
 ```
+wget https://www.dropbox.com/s/ttafrqaikst8xea/ont_prev.sort.bam?dl=0 
+```
+
+Using Sniffles v2 this should be a simple command like:
+
+```
+samtools index ont_prev.sort.bam
 sniffles -i ont_prev.sort.bam -v sniffles.vcf
+```
+
+You can also download the file from here if you had issues:
+```
+wget https://www.dropbox.com/s/7fpgnoq818mxsnk/sniffles.vcf?dl=0
 ```
 
 Next we can inspect the file with e.g.:
