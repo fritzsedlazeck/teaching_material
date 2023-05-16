@@ -63,7 +63,7 @@ You can also download that VCF file from here if you had any difficulties:
 
 Lets count how many SV we could identify: 
 ```
-zgrep -vc '#' diploidSV.vcf.gz
+grep -vc '#' assemblytics.vcf
 ```
 
 
