@@ -113,6 +113,12 @@ mv  diploidSV.vcf illumina.vcf
 less illumina.vcf
 ```
 
+Please dont forget to switch back and copy that file. 
+```
+cd ../../../
+cp Out_Manta/results/variants/illumina.vcf .
+```
+
 You can get the file here if you had difficulties:
 ```
 wget https://www.dropbox.com/s/wcro3nzkird5nx8/illumina.vcf?dl=0
@@ -123,6 +129,8 @@ Lets count how many SV we could identify:
 ```
 zgrep -vc '#' illumina.vcf
 ```
+
+
 
 ## Part 3: Assembly based SV detection 
 Finally we are ready for the Oxford Nanopore detection using sniffles. For this use the "ont_mapped.sort.bam" file that I have previously mapped using minimap2. 
