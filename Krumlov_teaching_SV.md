@@ -52,7 +52,7 @@ Here is the link: [http://assemblytics.com/analysis.php?code=r2WN5OvWWASgQeOlUg3
 
 To convert the Assemblytics file for SV we will need SURVIVOR:
 ```
-SURVIVOR convertAssemblytics  user_data/r2WN5OvWWASgQeOlUg3c/my_favorite_organism.Assemblytics_structural_variants.bed 50 assemblytics.vcf
+SURVIVOR convertAssemblytics my_favorite_organism.Assemblytics_structural_variants.bed 50 assemblytics.vcf
 ```
 
 You can also download that VCF file from here if you had any difficulties:
