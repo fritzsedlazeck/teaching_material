@@ -91,7 +91,7 @@ This should just take seconds as it initiates the folder structure and specifies
 
 ### 2. Run the analysis:
 ```
-python Out_Manta/runWorkflow.py -j 2 -m local -g 10
+python2 Out_Manta/runWorkflow.py -j 2 -m local -g 10
 ```
 
 This will launch the Manta pipeline that we previously configured. `-j` specifies the number of CPU threads (2 in our case), `-m` local indicates that it should not try to run things on different nodes or instances and `-g 30` specifies the available memory for the process in GB.
