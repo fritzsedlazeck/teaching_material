@@ -37,6 +37,8 @@ Next, we take assembly and reference there: (NOTE! the workshop organizers might
 ```
 wget https://www.dropbox.com/s/uqldg7ir8qzg6ty/GCF_000165345.1.fa?dl=0
 wget https://www.dropbox.com/s/1f9e65k34r80rvd/crypto_BCM2021_v2_min100k_rename.fasta?dl=0 
+mv GCF_000165345.1.fa?dl=0 GCF_000165345.1.fa
+mv crypto_BCM2021_v2_min100k_rename.fasta?dl=0 crypto_BCM2021_v2_min100k_rename.fasta
 ```
 
 Now we can initiate the alignment:
@@ -56,6 +58,7 @@ SURVIVOR convertAssemblytics  user_data/r2WN5OvWWASgQeOlUg3c/my_favorite_organis
 You can also download that VCF file from here if you had any difficulties:
 ```
  wget https://www.dropbox.com/s/jm0e6mbrqggwl7g/assemblytics.vcf?dl=0
+ mv assemblytics.vcf?dl=0 assemblytics.vcf
 ```
 
 Lets count how many SV we could identify: 
@@ -70,6 +73,7 @@ In this part we will use Manta to interpret the signals we can obtain from abnor
 Again you might get the file already on your account or you can download from here:
 ```
 wget https://www.dropbox.com/s/1mjb0tjbtmrcugj/our_refCrypto_reads.sort.bam?dl=0
+mv our_refCrypto_reads.sort.bam?dl=0 our_refCrypto_reads.sort.bam
 ```
 
 You might need to index the reference and the bam file that we provided to you:
@@ -81,7 +85,7 @@ samtools index our_refCrypto_reads.sort.bam
 ### 1. Initiate the run:
 Next we initiate the Manta run:
 ```
-configManta.py --bam= our_refCrypto_reads.sort.bam --referenceFasta=../GCF_000165345.1.fa  --runDir=Out_Manta
+configManta.py --bam=our_refCrypto_reads.sort.bam --referenceFasta=GCF_000165345.1.fa  --runDir=Out_Manta
 ```
 This should just take seconds as it initiates the folder structure and specifies for the subsequent process to use our mapped reads and our reference file. In addition, we specify the output to be written in `Out_Manta`
 
@@ -122,6 +126,7 @@ Finally we are ready for the Oxford Nanopore detection using sniffles. For this 
 You might have that file on your account, but if not you can download it here:
 ```
 wget https://www.dropbox.com/s/ttafrqaikst8xea/ont_prev.sort.bam?dl=0 
+mv ont_prev.sort.bam?dl=0 ont_prev.sort.bam
 ```
 
 Using Sniffles v2 this should be a simple command like:
@@ -134,6 +139,7 @@ sniffles -i ont_prev.sort.bam -v sniffles.vcf
 You can also download the file from here if you had issues:
 ```
 wget https://www.dropbox.com/s/7fpgnoq818mxsnk/sniffles.vcf?dl=0
+mv sniffles.vcf?dl=0 sniffles.vcf
 ```
 
 Next we can inspect the file with e.g.:
