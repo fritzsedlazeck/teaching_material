@@ -127,7 +127,7 @@ mv illumina.vcf?dl=0 illumina.vcf
 
 Lets count how many SV we could identify: 
 ```
-zgrep -vc '#' illumina.vcf
+grep -vc '#' illumina.vcf
 ```
 
 
