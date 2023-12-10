@@ -28,42 +28,14 @@ The data is from a recent publication in Gigascience: [Fully resolved assembly o
 We will study this sample of Cryptosporidium compared to the previously available reference sequence (GCF_000165345.1.). 
 
 
-## Part 1: Assembly based SV detection 
-As discussed in the lecture, assembly based SV detection is quite comprehensive. Nevertheless, before we start, we need to align a new assembly to an existing e.g. reference genome to identify structural differences. For this we will be using MUMmer (nucmer). Alternatively, you could also utilize Dipcall as a program especially if you have a phased assembly at hand. MUMmer is a commonly used package that allows you to rapidly compare two sequences together and includes multiple packages for summary reports over the aligned sequences. This includes variant reporting, coordinate reporting or even the generation of dot plots. As shown in the lecture dot plot is very helpful and intuitive method to compare sequences for us.
 
-To begin to call variants we need to first compare the reference to our assembly. 
-Next, we take assembly and reference there: (NOTE! the workshop organizers might have organized the data already for you)
-```
-wget https://www.dropbox.com/s/uqldg7ir8qzg6ty/GCF_000165345.1.fa?dl=0
-wget https://www.dropbox.com/s/1f9e65k34r80rvd/crypto_BCM2021_v2_min100k_rename.fasta?dl=0 
-mv GCF_000165345.1.fa?dl=0 GCF_000165345.1.fa
-mv crypto_BCM2021_v2_min100k_rename.fasta?dl=0 crypto_BCM2021_v2_min100k_rename.fasta
+
+
+## Conda 
+```bash
+source Share/conda_init.sh
 ```
 
-Now we can initiate the alignment:
-```
-nucmer -maxmatch -l 100 -c 500 GCF_000165345.1.fa crypto_BCM2021_v2_min100k_rename.fasta
-```
-
-We can now switch over to ([Assemblytics](http://assemblytics.com/)). For simplicity I have created a session for us, otherwise you can try to download and upload your out.delta file. I will show and explain the different plots and outputs available. 
-
-Here is the link: [http://assemblytics.com/analysis.php?code=r2WN5OvWWASgQeOlUg3c](http://assemblytics.com/analysis.php?code=r2WN5OvWWASgQeOlUg3c).
-
-To convert the Assemblytics file for SV we will need SURVIVOR:
-```
-SURVIVOR convertAssemblytics my_favorite_organism.Assemblytics_structural_variants.bed 50 assemblytics.vcf
-```
-
-You can also download that VCF file from here if you had any difficulties:
-```
- wget https://www.dropbox.com/s/jm0e6mbrqggwl7g/assemblytics.vcf?dl=0
- mv assemblytics.vcf?dl=0 assemblytics.vcf
-```
-
-Lets count how many SV we could identify: 
-```
-grep -vc '#' assemblytics.vcf
-```
 
 
 ## Part 2: Illumina based SV detection 
@@ -129,9 +101,10 @@ Lets count how many SV we could identify:
 grep -vc '#' illumina.vcf
 ```
 
+Let us all discuss the different variant types and how they are reported! 
 
 
-## Part 3: Assembly based SV detection 
+## Part 3: Long read based SV detection 
 Finally we are ready for the Oxford Nanopore detection using sniffles. For this use the "ont_mapped.sort.bam" file that I have previously mapped using minimap2. 
 You might have that file on your account, but if not you can download it here:
 ```
@@ -143,7 +116,7 @@ Using Sniffles v2 this should be a simple command like:
 
 ```
 samtools index ont_prev.sort.bam
-/home/genomics/.local/bin/sniffles -i ont_prev.sort.bam -v sniffles.vcf
+sniffles -i ont_prev.sort.bam -v sniffles.vcf
 ```
 
 You can also download the file from here if you had issues:
@@ -164,6 +137,7 @@ grep -vc '#' sniffles.vcf
 How many SV did you detect? 
 
 ## Part 4: Structural Variant comparison
+
 Now that we generated Assembly, Illumina  and ONT based SV calls it is time to compare them. One tool that you can use for this very easily is SURVIVOR. SURVIVOR is a very simple method to compare SV but also includes multiple other methods that might be useful. Also feel free to check out Truvari, which is one of our newest methods to compare SV. When comparing SV it is quite important to take multiple things into considerations. Feel free to ask if you want to discuss certain points more. 
 
 For SURVIVOR we want to use the merge option. Before doing this, the merge option requires a file including all paths and VCF files that you want to compare. Thus, we generate the file like this:
