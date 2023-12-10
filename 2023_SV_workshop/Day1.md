@@ -34,6 +34,14 @@ We will study this sample of Cryptosporidium compared to the previously availabl
 Keep in mind that we (ie. Luis) has already organized the installation of all the needed programs. For this we are using different enviroments that you can list and activate. For installation of additional software for your home cluster use https://bioconda.github.io/
 Here is a link to give you more insights into conda enviroments https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#activating-an-environment 
 
+
+Please activate your coda enviroment using: 
+```bash
+source Share/conda_init.sh
+```
+You will need to do this everytime you open a new terminal!
+
+
 ## Part 1: Assembly based SV detection (Assemblytics)
 As discussed in the lecture, assembly based SV detection is quite comprehensive. Nevertheless, before we start, we need to align a new assembly to an existing e.g. reference genome to identify structural differences. For this we will be using MUMmer (nucmer). Alternatively, you could also utilize Dipcall as a program especially if you have a phased assembly at hand. MUMmer is a commonly used package that allows you to rapidly compare two sequences together and includes multiple packages for summary reports over the aligned sequences. This includes variant reporting, coordinate reporting or even the generation of dot plots. As shown in the lecture dot plot is very helpful and intuitive method to compare sequences for us.
 
