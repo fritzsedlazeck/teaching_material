@@ -62,6 +62,11 @@ ln -T ~/Share/data/GCF_000165345.1.fa -s GCF_000165345.1.fa
 ln -T ~/Share/data/assembly/crypto_BCM2021_v2_min100k_rename.fasta -s crypto_BCM2021_v2_min100k_rename.fasta
 ```
 
+Now we need to initiate the conda environment `short`
+```bash
+conda activate short
+```
+
 Now we can initiate the alignment:
 ```
 nucmer -maxmatch -l 100 -c 500 GCF_000165345.1.fa crypto_BCM2021_v2_min100k_rename.fasta --prefix mummer_out
