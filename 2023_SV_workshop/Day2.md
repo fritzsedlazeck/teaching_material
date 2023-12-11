@@ -33,7 +33,8 @@ We will study this sample of Cryptosporidium compared to the previously availabl
 
 ## Conda 
 ```bash
-source Share/conda_init.sh
+source ~/Share/conda_init.sh
+conda activate short
 ```
 
 
@@ -43,14 +44,18 @@ In this part we will use Manta to interpret the signals we can obtain from abnor
 
 Again you might get the file already on your account or you can download from here:
 ```
-wget https://www.dropbox.com/s/1mjb0tjbtmrcugj/our_refCrypto_reads.sort.bam?dl=0
-mv our_refCrypto_reads.sort.bam?dl=0 our_refCrypto_reads.sort.bam
+# make a directory
+mkdir day2
+
+# link the data
+ln -T ~/Share/data/day2/short-reads/our_refCrypto_reads.sort.bam -s our_refCrypto_reads.sort.bam
+samtools index our_refCrypto_reads.sort.bam
 ```
 
 You might need to index the reference and the bam file that we provided to you:
 ```
+ln -T ~/Share/data/GCF_000165345.1.fa -s GCF_000165345.1.fa
 samtools faidx GCF_000165345.1.fa
-samtools index our_refCrypto_reads.sort.bam
 ```
 
 ### 1. Initiate the run:
@@ -71,34 +76,28 @@ Manta now searches for abnormal paired-end reads and split-reads across our mapp
 
 Our SV calling results can be found here (Out_Manta/results/variants/). Let us open quickly the output of the highest quality SV files:
 ```
-cd  Out_Manta/results/variants/
-ls 
+ls  Out_Manta/results/variants/
 ```
 As you can see, we have multiple VCF files. These represent the different stages of Manta and the confidence level for the SV calls. We typically use the `diploidSV.vcf.gz` file.
 
 
 Let us open quickly the output of the highest quality SV files:
 ```
-gunzip diploidSV.vcf.gz
-mv  diploidSV.vcf illumina.vcf
+gzip -dc Out_Manta/results/variants/diploidSV.vcf.gz > illumina.vcf
 less illumina.vcf
-```
-
-Please dont forget to switch back and copy that file. 
-```
-cd ../../../
-cp Out_Manta/results/variants/illumina.vcf .
 ```
 
 You can get the file here if you had difficulties:
 ```
-wget https://www.dropbox.com/s/wcro3nzkird5nx8/illumina.vcf?dl=0
-mv illumina.vcf?dl=0 illumina.vcf
+ln -T ~/Share/data/day2/short-reads/illumina.vcf -s illumina_results.vcf
 ```
 
 Lets count how many SV we could identify: 
 ```
 grep -vc '#' illumina.vcf
+
+# or if you linked the results file
+grep -vc '#' illumina_results.vcf
 ```
 
 Let us all discuss the different variant types and how they are reported! 
@@ -108,21 +107,20 @@ Let us all discuss the different variant types and how they are reported!
 Finally we are ready for the Oxford Nanopore detection using sniffles. For this use the "ont_mapped.sort.bam" file that I have previously mapped using minimap2. 
 You might have that file on your account, but if not you can download it here:
 ```
-wget https://www.dropbox.com/s/ttafrqaikst8xea/ont_prev.sort.bam?dl=0 
-mv ont_prev.sort.bam?dl=0 ont_prev.sort.bam
+conda activate long
+ln -T ~/Share/data/day2/ont-reads/ont_prev.sort.bam -s ont_prev.sort.bam
+samtools index ont_prev.sort.bam
 ```
 
 Using Sniffles v2 this should be a simple command like:
 
 ```
-samtools index ont_prev.sort.bam
 sniffles -i ont_prev.sort.bam -v sniffles.vcf
 ```
 
 You can also download the file from here if you had issues:
 ```
-wget https://www.dropbox.com/s/7fpgnoq818mxsnk/sniffles.vcf?dl=0
-mv sniffles.vcf?dl=0 sniffles.vcf
+ln -T ~/Share/data/day2/ont-reads.sniffles.vcf -s sniffles_results.vcf
 ```
 
 Next we can inspect the file with e.g.:
@@ -142,6 +140,7 @@ Now that we generated Assembly, Illumina  and ONT based SV calls it is time to c
 
 For SURVIVOR we want to use the merge option. Before doing this, the merge option requires a file including all paths and VCF files that you want to compare. Thus, we generate the file like this:
 ```
+ln -T ~/Share/data/assembly/assemblytics.vcf -s assemblytics.vcf
 ls sniffles.vcf > vcf_files
 ls assemblytics.vcf >> vcf_files
 ls illumina.vcf >> vcf_files
