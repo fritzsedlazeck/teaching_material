@@ -83,13 +83,12 @@ SURVIVOR convertAssemblytics my_favorite_organism.Assemblytics_structural_varian
 
 You can also download that VCF file from here if you had any difficulties:
 ```
- wget https://www.dropbox.com/s/jm0e6mbrqggwl7g/assemblytics.vcf?dl=0
- mv assemblytics.vcf?dl=0 assemblytics.vcf
+ln -T ~/Share/data/assembly/assemblytics.vcf -s assemblytics.vcf
 ```
 
 Lets count how many SV we could identify: 
 ```
-grep -vc '#' assemblytics.vcf
+grep -vc '#' assemblytics.vcf | less -S
 ```
 
 Congratulations we now have SV calls from Assemblytics. Lets discuss these results together! 
