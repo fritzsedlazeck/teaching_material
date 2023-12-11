@@ -38,9 +38,13 @@ Here is a link to give you more insights into conda enviroments https://conda.io
 Please activate your coda enviroment using: 
 ```bash
 source Share/conda_init.sh
-conda activate base
 ```
 You will need to do this everytime you open a new terminal!
+
+If you don't see (base) next yo your username then type
+```bash
+conda activate base
+```
 
 
 ## Part 1: Assembly based SV detection (Assemblytics)
