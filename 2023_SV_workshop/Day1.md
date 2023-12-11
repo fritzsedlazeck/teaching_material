@@ -78,12 +78,13 @@ Here is the link: [http://assemblytics.com/analysis.php?code=r2WN5OvWWASgQeOlUg3
 
 To convert the Assemblytics file for SV we will need SURVIVOR: We want to discard all SV impacting less than 50 bp. 
 ```
+ln -T ~/Share/data/assembly/user_data/r2WN5OvWWASgQeOlUg3c/my_favorite_organism.Assemblytics_structural_variants.bed -s my_favorite_organism.Assemblytics_structural_variants.bed
 SURVIVOR convertAssemblytics my_favorite_organism.Assemblytics_structural_variants.bed 50 assemblytics.vcf
 ```
 
 You can also download that VCF file from here if you had any difficulties:
 ```
-ln -T ~/Share/data/assembly/assemblytics.vcf -s assemblytics.vcf
+ln -T ~/Share/data/assembly/assemblytics.vcf -s assemblytics_results.vcf
 ```
 
 Lets count how many SV we could identify: 
@@ -107,6 +108,7 @@ samtools faidx GCF_000165345.1.fa
 
 After completing this we will need to initate our alignment and variant calling step. Note that here Dipcall only writes the commands in one file given your input parameters. 
 ```
+conda activate long
 run-dipcall  -t 2 -a outputdipcall GCF_000165345.1.fa crypto_BCM2021_v2_min100k_rename.fasta crypto_BCM2021_v2_min100k_rename.fasta > prefix.mak
 ```
 
