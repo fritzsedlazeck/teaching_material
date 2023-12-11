@@ -54,10 +54,12 @@ To begin to call variants we need to first compare the reference to our assembly
 Next, we take assembly and reference there: (NOTE! the workshop organizers might have organized the data already for you)
 ```
 # reference genome
-~/Share/data/GCF_000165345.1.fa
+mkdir day1
+cd day1
+ln -T ~/Share/data/GCF_000165345.1.fa -s GCF_000165345.1.fa 
 
 # assembly
-~/Share/data/assembly/crypto_BCM2021_v2_min100k_rename.fasta
+ln -T ~/Share/data/assembly/crypto_BCM2021_v2_min100k_rename.fasta -s crypto_BCM2021_v2_min100k_rename.fasta
 ```
 
 Now we can initiate the alignment:
