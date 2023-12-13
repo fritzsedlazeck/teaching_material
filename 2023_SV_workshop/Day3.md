@@ -281,7 +281,7 @@ Next lets use the following command to annotate the VCF from exercise 3:
 
 ```bash
 svafotate annotate \
-   --vcf ../day3/03_population/merge.vcf.gz \
+   --vcf ~/day3/03_population/merge.vcf.gz \
    --out merge_af_annotated.vcf.gz \
    --bed population_af.bed.gz
 ```
@@ -289,7 +289,7 @@ svafotate annotate \
 #### 4.2.1 SVAFotate command explained
 Sub-command from SVAFotate to annotate VCFs: `annotate`
 
-Input SV VCF from a previous analysis: `--vcf ../03_population/merge.vcf.gz`
+Input SV VCF from a previous analysis: `--vcf ~/day3/03_population/merge.vcf.gz`
 
 Output VCF that will contain population AF annotations: `--out merge_af_annotated.vcf.gz`
 
