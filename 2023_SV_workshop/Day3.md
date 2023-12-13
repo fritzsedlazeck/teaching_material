@@ -298,7 +298,7 @@ Population AF: `--bed population_af.bed`
 #### 4.2.2 Let's check a couple of SVs
 ```bash
 bcftools view --no-header merge_af_annotated.vcf.gz | less -S
-
+```
 
 #### 4.3 SVAFotate help
 To get the help menu from svafotate we can type:
