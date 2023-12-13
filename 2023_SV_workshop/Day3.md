@@ -207,10 +207,11 @@ For this exercise we will use two related samples, HG002 and HG003. The family r
 For this exercise, we have already called SVs with Sniffles2 and produced a special intermediary file (.snf) that contains the needed information to perform the population level SV calling.
 
 ```bash
+cd ~/
 mkdir 03_population
 cd 03_population
 # input
-ln -T ~/Share/data/day3/03/hg002.snf -s hg002.snf
+ln -T ../01_sv_germline/hg002.snf -s hg002.snf
 ln -T ~/Share/data/day3/03/hg003.snf -s hg003.snf
 # reference
 ln -T ~/Share/data/ref/grch37.fasta.gz -s grch37.fasta.gz
