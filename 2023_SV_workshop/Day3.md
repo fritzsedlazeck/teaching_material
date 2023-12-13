@@ -164,7 +164,7 @@ If you want to see the help menu from AnnotSV you can execute the following comm
 
 ### 2.2 Filtering interesting hits
 According to AnnoSV [manual](https://lbgi.fr/AnnotSV/Documentation/README.AnnotSV_latest.pdf)
-AnnotSV_ranking_score (field 116): SV ranking score following the 2019 joint consensus
+AnnotSV_ranking_score (field 117): SV ranking score following the 2019 joint consensus
 recommendation of ACMG and ClinGen. Scoring: 
 * pathogenic if ≥0.99
 * likely pathogenic [0.90;0.98]
