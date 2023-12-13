@@ -262,8 +262,9 @@ SVAFotate is a tool for annotating structural variant VCFs with population level
 
 ### 4.1 Get the data
 ```bash
-mkdir 04_population_af
-cd 04_population_af
+cd ~/day3
+mkdir ~/day3/04_population_af
+cd ~/day3/04_population_af
 # input
 ln -T ~/Share/data/day3/04/popAFs_GRCh37.bed.gz -s population_af.bed.gz
 ```
@@ -280,7 +281,7 @@ Next lets use the following command to annotate the VCF from exercise 3:
 
 ```bash
 svafotate annotate \
-   --vcf ../03_population/merge.vcf.gz \
+   --vcf ../day3/03_population/merge.vcf.gz \
    --out merge_af_annotated.vcf.gz \
    --bed population_af.bed.gz
 ```
