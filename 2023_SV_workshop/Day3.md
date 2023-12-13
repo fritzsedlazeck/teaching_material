@@ -207,7 +207,7 @@ For this exercise we will use two related samples, HG002 and HG003. The family r
 For this exercise, we have already called SVs with Sniffles2 and produced a special intermediary file (.snf) that contains the needed information to perform the population level SV calling.
 
 ```bash
-cd ~/
+cd ~/day3
 mkdir 03_population
 cd 03_population
 # input
