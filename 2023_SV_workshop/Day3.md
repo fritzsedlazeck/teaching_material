@@ -190,7 +190,13 @@ cat hg002_germline_annotsv.tsv | cut -f 118 | sort | uniq -c
 
 cat hg002_germline_annotsv.tsv | awk -F '\t' '{if($118 == 1) print $_ }' | less -S
 ```
+### 2.3 bedtools for non-model organisms
+```bash
+bedtools intersect -a genes.bed -b output.vcf -f 1
 
+# For help
+bedtools intersect --help
+```
 
 ## Part 3: Population level SV calling with Sniffles
 Now, we are going to investigate SV not in a single sample, but in a collection of samples. The samples can be related (family) or not (population). Sniffles2 has a built in way to merge samples in order to get a **population level VCF.**
