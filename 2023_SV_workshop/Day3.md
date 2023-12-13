@@ -48,8 +48,9 @@ For this exercise we will use the reference genome GRCh37. To begin to call vari
 
 
 ```bash
-mkdir 01_sv_germline
-cd 01_sv_germline
+mkdir ~/day3
+mkdir ~/day3/01_sv_germline
+cd ~/day3/01_sv_germline
 # input
 ln -T ~/Share/data/day3/01/hg002.bam -s hg002.bam
 ln -T ~/Share/data/day3/01/hg002.bam.bai -s hg002.bam.bai
@@ -209,7 +210,7 @@ For this exercise, we have already called SVs with Sniffles2 and produced a spec
 ```bash
 cd ~/day3
 mkdir 03_population
-cd 03_population
+cd ~/day3/03_population
 # input
 ln -T ~/Share/data/day3/03/hg002.snf -s hg002.snf
 ln -T ~/Share/data/day3/03/hg003.snf -s hg003.snf
@@ -316,8 +317,8 @@ For htis exercise, we are going to use Sniffles2 to investigate low-frequency ty
 For this exercise we will use the same file as in part one.
 
 ```bash
-mkdir 05_sv_mosaic
-cd 05_sv_mosaic
+mkdir ~/day3/05_sv_mosaic
+cd ~/day3/05_sv_mosaic
 # input
 ln -T ~/Share/data/day3/05/hg002.bam -s hg002.bam
 ln -T ~/Share/data/day3/05/hg002.bam.bai -s hg002.bam.bai
