@@ -211,7 +211,7 @@ cd ~/day3
 mkdir 03_population
 cd 03_population
 # input
-ln -T ../01_sv_germline/hg002.snf -s hg002.snf
+ln -T ../01_sv_germline/hg002_germline.snf -s hg002.snf
 ln -T ~/Share/data/day3/03/hg003.snf -s hg003.snf
 # reference
 ln -T ~/Share/data/ref/grch37.fasta.gz -s grch37.fasta.gz
