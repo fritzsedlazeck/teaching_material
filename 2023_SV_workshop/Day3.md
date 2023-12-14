@@ -11,6 +11,10 @@ Rice University
 
 ## Day 3
 
+## Physalia-Courses
+This is part of the Physalia-Courses lectured in Dec 2023
+https://www.physalia-courses.org/
+
 ### Goals of this module
 The goal of this module is to get you familiarized with Structural Variations (SVs) identification using long-read based mapping.
 For SVs detection in long-read data we will be using Sniffles2. Other methods exist that use both ONT and PacBio data, such as cuteSV.
