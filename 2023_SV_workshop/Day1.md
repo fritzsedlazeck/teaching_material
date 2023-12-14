@@ -10,6 +10,11 @@ Computer Science Department,
 Rice University 
 ***
 
+## Physalia-Courses
+This is part of the Physalia-Courses lectured in Dec 2023
+https://www.physalia-courses.org/
+
+
 ## Goals of this module
 The goal of this module is to get you familiarized with variant identification (especially Structural Variations) across assembly, short read based mapping and long read based mapping. 
 For Structural Variations (SVs) detection we will be using multiple methods (Assemblytics, Dipcall, Manta, Sniffles, etc) and then later compare them across to obtain more insights about advantages and disadvantages across the differnet approaches.
