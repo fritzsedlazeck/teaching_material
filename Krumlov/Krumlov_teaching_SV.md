@@ -28,9 +28,6 @@ We will utilize data from Cryptosporidium for our exercise. Cryptosporidium is a
 The data is from a recent publication in Gigascience: [Fully resolved assembly of Cryptosporidium parvum](https://doi.org/10.1093/gigascience/giac010). Here we produced short read Illumina data together with Oxford Nanopore long read data to obtain a fully assembled (T2T) assembly and thus improve the reference overall. 
 We will study this sample of Cryptosporidium compared to the previously available reference sequence (GCF_000165345.1.). 
 
-## Feedback
-It would help me a lot if you take 10 seconds and evaluate my workshop: [Form for evaluation](https://forms.gle/PDCXgdw15UDD3EZ38). This is anonymous and helps me for my faculty evaluation this year. Thank you!
-
 
 ## Part 1: Assembly based SV detection 
 As discussed in the lecture, assembly based SV detection is quite comprehensive. Nevertheless, before we start, we need to align a new assembly to an existing e.g. reference genome to identify structural differences. For this we will be using MUMmer (nucmer). Alternatively, you could also utilize Dipcall as a program especially if you have a phased assembly at hand. MUMmer is a commonly used package that allows you to rapidly compare two sequences together and includes multiple packages for summary reports over the aligned sequences. This includes variant reporting, coordinate reporting or even the generation of dot plots. As shown in the lecture dot plot is very helpful and intuitive method to compare sequences for us.
@@ -187,7 +184,4 @@ perl -ne 'print "$1\n" if /SUPP_VEC=([^,;]+)/'  sample_merged.vcf | sort | uniq 
 ```
 
 As you can see you will get the pattern and the number of times the pattern occurs. The first number is the number of times it can be observed in the VCF file. The 2nd number is the pattern (0 or 1 depending if it was observed or not) 
-
-## Feedback
-It would help me a lot if you take 10 seconds and evaluate my workshop: [Form for evaluation](https://forms.gle/PDCXgdw15UDD3EZ38). This is anonymous and helps me for my faculty evaluation this year. Thank you!
 
