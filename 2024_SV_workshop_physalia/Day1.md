@@ -79,14 +79,13 @@ We can now switch over to Assemblytics. For simplicity had created a session for
 ```
 # assemblytics <delta_file> <output_prefix> <unique_anchor_length> <min_variant_size> <max_variant_size>
 
-assemblytics mummer_out.delta  output_assemblytics 10000  50  1000
+assemblytics mummer_out.delta  output_assemblytics 10000  50  10000
 ```
 
 To convert the Assemblytics file for SV we will need SURVIVOR: We want to discard all SV impacting less than 50 bp. 
 ```
-SURVIVOR convertAssemblytics day1_data/assembly/crypto.Assemblytics_structural_variants.bed 50 assemblytics.vcf
+SURVIVOR convertAssemblytics output_assemblytics.Assemblytics_structural_variants.bed 50 assemblytics.vcf
 ```
-
 
 Lets count how many SV we could identify: 
 ```
@@ -99,8 +98,10 @@ grep -v '#'  assemblytics.vcf
 ```
 
 
-You can also see that VCF file from here if you had any difficulties:
+In case you were not able to run Assemblytics, you can also see that VCF file from here if you had any difficulties:
 ```
+SURVIVOR convertAssemblytics day1_data/assembly/crypto.Assemblytics_structural_variants.bed 50 assemblytics.vcf
+
 grep -vc '#' day1_data/assembly/assemblytics.vcf
 
 grep -v '#'  day1_data/assembly/assemblytics.vcf
