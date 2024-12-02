@@ -78,11 +78,8 @@ nucmer -maxmatch -l 100 -c 500 day1_data/GCF_000165345.1.fa day1_data/assembly/c
 We can now switch over to Assemblytics. For simplicity had created a session for us, moreover the web application recently was sutdown, but we have saved a copy for you to see. The command line tool still works. 
 ```
 # assemblytics <delta_file> <output_prefix> <unique_anchor_length> <min_variant_size> <max_variant_size>
-```
 
-You can look at all the SVs:
-```assemblytics mummer_out.delta  output_assemblytics 10000  50  
-1000
+assemblytics mummer_out.delta  output_assemblytics 10000  50  1000
 ```
 
 To convert the Assemblytics file for SV we will need SURVIVOR: We want to discard all SV impacting less than 50 bp. 
