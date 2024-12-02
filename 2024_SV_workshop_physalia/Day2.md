@@ -33,14 +33,11 @@ We will study this sample of Cryptosporidium compared to the previously availabl
 
 
 
-
-
 ## Conda 
 ```bash
-source ~/Share/conda_init.sh
-conda activate short
+source /home/ubuntu/share/conda_init.sh
+conda activate sr
 ```
-
 
 
 ## Part 2: Illumina based SV detection 
@@ -50,22 +47,18 @@ Again you might get the file already on your account or you can download from he
 ```
 # make a directory
 mkdir day2
+cd day2
+ln -T /home/ubuntu/share/data/day2 -s day2_data
 
-# link the data
-ln -T ~/Share/data/day2/short-reads/our_refCrypto_reads.sort.bam -s our_refCrypto_reads.sort.bam
-samtools index our_refCrypto_reads.sort.bam
 ```
 
-You might need to index the reference and the bam file that we provided to you:
-```
-ln -T ~/Share/data/GCF_000165345.1.fa -s GCF_000165345.1.fa
-samtools faidx GCF_000165345.1.fa
-```
+It contains both the reads and the reference genome
+
 
 ### 1. Initiate the run:
 Next we initiate the Manta run:
 ```
-configManta.py --bam=our_refCrypto_reads.sort.bam --referenceFasta=GCF_000165345.1.fa  --runDir=Out_Manta
+configManta.py --bam=day2_data/short-reads/our_refCrypto_reads.sort.bam --referenceFasta=day2_data/GCF_000165345.1.fa  --runDir=Out_Manta
 ```
 This should just take seconds as it initiates the folder structure and specifies for the subsequent process to use our mapped reads and our reference file. In addition, we specify the output to be written in `Out_Manta`
 
@@ -93,7 +86,7 @@ less illumina.vcf
 
 You can get the file here if you had difficulties:
 ```
-ln -T ~/Share/data/day2/short-reads/illumina.vcf -s illumina_results.vcf
+ln -T day2_data/short-reads/illumina.vcf -s illumina_results.vcf
 ```
 
 Lets count how many SV we could identify: 
@@ -111,32 +104,27 @@ Let us all discuss the different variant types and how they are reported!
 Finally we are ready for the Oxford Nanopore detection using sniffles. For this use the "ont_mapped.sort.bam" file that I have previously mapped using minimap2. 
 You might have that file on your account, but if not you can download it here:
 ```
-conda activate long
-ln -T ~/Share/data/day2/ont-reads/ont_prev.sort.bam -s ont_prev.sort.bam
-samtools index ont_prev.sort.bam
+conda activate lr
 ```
 
 Using Sniffles v2 this should be a simple command like:
 
 ```
-sniffles -i ont_prev.sort.bam -v sniffles.vcf
+sniffles -i day2_data/ont-reads/ont_prev.sort.bam -v sniffles.vcf
 ```
 
-You can also download the file from here if you had issues:
-```
-ln -T ~/Share/data/day2/ont-reads.sniffles.vcf -s sniffles_results.vcf
-```
-
-Next we can inspect the file with e.g.:
-```
-less -S sniffles.vcf
-```
-or 
+To check the number of SVs detected by Sniffles:
 ```
 grep -vc '#' sniffles.vcf
 ```
 
 How many SV did you detect? 
+
+
+You can also check the file from here if you had issues:
+```
+less -S day2_data/ont-reads/sniffles.vcf
+```
 
 ## Part 4: Structural Variant comparison
 
@@ -144,10 +132,9 @@ Now that we generated Assembly, Illumina  and ONT based SV calls it is time to c
 
 For SURVIVOR we want to use the merge option. Before doing this, the merge option requires a file including all paths and VCF files that you want to compare. Thus, we generate the file like this:
 ```
-ln -T ~/Share/data/assembly/assemblytics.vcf -s assemblytics.vcf
 ls sniffles.vcf > vcf_files
-ls assemblytics.vcf >> vcf_files
 ls illumina.vcf >> vcf_files
+ls day2_data/assembly/assemblytics.vcf >> vcf_files
 ```
 
 Next we can initiate the compare with 100bp wobble and requiring that we are only merging with SV type agreement. Furthermore, we will only take variants into account with 50bp+. 
@@ -157,6 +144,7 @@ SURVIVOR merge vcf_files 100 1 1 0 0 50 sample_merged.vcf
 Lets check how good/bad the overlap is:
 ```
 perl -ne 'print "$1\n" if /SUPP_VEC=([^,;]+)/'  sample_merged.vcf | sort | uniq -c 
+
 ```
 
 As you can see you will get the pattern and the number of times the pattern occurs. The first number is the number of times it can be observed in the VCF file. The 2nd number is the pattern (0 or 1 depending if it was observed or not) 
