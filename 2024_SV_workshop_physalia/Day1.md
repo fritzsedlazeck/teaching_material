@@ -90,12 +90,12 @@ SURVIVOR convertAssemblytics day1_data/assembly/crypto.Assemblytics_structural_v
 
 Lets count how many SV we could identify: 
 ```
-grep -vc '#' output_assemblytics.Assemblytics_structural_variants.bed
+grep -vc '#' assemblytics.vcf
 ```
 
 You can look at all the SVs:
 ```
-grep -v '#'  output_assemblytics.Assemblytics_structural_variants.bed
+grep -v '#'  assemblytics.vcf
 ```
 
 
