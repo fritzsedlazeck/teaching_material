@@ -111,6 +111,11 @@ bcftools view --no-header hg002_germline.vcf.gz | wc -l
 bcftools view --no-header hg002_germline.vcf.gz | less -S
 ```
 
+#### 1.2.5 Samplot
+```bash
+bcftools view chr14:19713500-19714400 --regions --no-header hg002_germline.vcf.gz 
+samplot plot -r day3_data/38.fa.gz  -b day3_data/hg002_chr14_grch38.bam  -c chr14 -s 19713500 -e 19714400 -o example
+```
 
 ## Part 2: SV Annotation with AnnotSV
 In this part we will use AnnotSV to identify potential implications of the Structural Variants that we detected with Sniffles2. Here, the genome version that was discussed in earlier points is important. We need to use the same genome version in both the read-alignment/SV calling and annotation.
