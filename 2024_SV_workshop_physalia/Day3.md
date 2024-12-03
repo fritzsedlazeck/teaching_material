@@ -320,7 +320,7 @@ bash day3_data/run_stix.sh
 
 #### 4.2.2 Let's check a couple of SVs
 ```bash
-bcftools view --no-header merge_chr14_ann_stix.vcf | cut -f 1,2,3,8,10- | sed -e "s/;STIX/\tSTIX/g" | cut -f 1,2,3,5- | less -S
+bcftools view --no-header merge_chr14_ann_stix.vcf | cut -f 1,2,3,8,10- | sed -e "s/;STIX/\tSTIX/g" | cut -f 1,2,3,5,6,9- | less -S
 ```
 
 
