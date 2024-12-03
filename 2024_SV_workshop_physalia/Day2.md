@@ -60,6 +60,7 @@ First we need to align the reads to a reference genome
 
 ```bash
 bwa-mem2 mem -t 2 day2_data/GCF_000165345.1.fa day2_data/short-reads/raw_reads/reads_1.fq.gz day2_data/short-reads/raw_reads/reads_2.fq.gz | samtools view -hb > aligned_reads_refCrypto.sort.bam
+samtools index aligned_reads_refCrypto.sort.bam
 ```
 
 Next we initiate the Manta run:
@@ -120,8 +121,20 @@ You might have that file on your account, but if not you can download it here:
 conda activate lr
 ```
 
-Using Sniffles v2 this should be a simple command like:
+We are now going to align the long reads with minimap2
 
+```bash
+minimap2 -ax map-ont -t 2 day2_data/GCF_000165345.1.fa  day2_data/ont-reads/raw_reads_ont.fastq.gz | samtools sort -m 2G - > aligned_ONT_reads_Crypto.sort.bam
+samtools index aligned_ONT_reads_Crypto.sort.bam
+```
+
+Using Sniffles2 this should be a simple command like:
+
+```bash
+sniffles -i aligned_ONT_reads_Crypto.sort.bam -v sniffles.vcf
+```
+
+In case you had issues with the long read alignment, you ca use this example
 ```bash
 sniffles -i day2_data/ont-reads/ont_prev.sort.bam -v sniffles.vcf
 ```
