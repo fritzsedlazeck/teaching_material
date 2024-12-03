@@ -60,12 +60,13 @@ First we need to align the reads to a reference genome
 
 ```bash
 bwa-mem2 mem -t 2 day2_data/GCF_000165345.1.fa day2_data/short-reads/raw_reads/reads_1.fq.gz day2_data/short-reads/raw_reads/reads_2.fq.gz | samtools view -hb > aligned_reads_refCrypto.sort.bam
-samtools index aligned_reads_refCrypto.sort.bam
+samtools sort -o aligned_reads_refCrypto.actually_sorted.bam  aligned_reads_refCrypto.sort.bam
+samtools index aligned_reads_refCrypto.actually_sorted.bam
 ```
 
 Next we initiate the Manta run:
 ```bash
-configManta.py --bam=aligned_reads_refCrypto.sort.bam --referenceFasta=day2_data/GCF_000165345.1.fa  --runDir=Out_Manta
+configManta.py --bam=aligned_reads_refCrypto.actually_sorted.bam --referenceFasta=day2_data/GCF_000165345.1.fa  --runDir=Out_Manta
 ```
 
 
