@@ -59,7 +59,7 @@ It contains both the reads and the reference genome
 First we need to align the reads to a reference genome
 
 ```bash
-bwa-mem2 mem -t 4 day2_data/GCF_000165345.1.fa day2_data/short-reads/raw_reads/reads_1.fq.gz day2_data/short-reads/raw_reads/reads_2.fq.gz | samtools view -hb > aligned_reads_refCrypto.sort.bam
+bwa-mem2 mem -t 2 day2_data/GCF_000165345.1.fa day2_data/short-reads/raw_reads/reads_1.fq.gz day2_data/short-reads/raw_reads/reads_2.fq.gz | samtools view -hb > aligned_reads_refCrypto.sort.bam
 ```
 
 Next we initiate the Manta run:
