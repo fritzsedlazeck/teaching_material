@@ -169,6 +169,13 @@ SURVIVOR merge vcf_files 100 1 1 0 0 50 sample_merged.vcf
 ```
 Lets check how good/bad the overlap is:
 ```bash
+vcf_parse_support.py sample_merged.vcf | sort | uniq -c 
+
+```
+
+You can also use regular expressions
+
+```bash
 perl -ne 'print "$1\n" if /SUPP_VEC=([^,;]+)/'  sample_merged.vcf | sort | uniq -c 
 
 ```
