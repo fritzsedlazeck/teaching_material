@@ -28,7 +28,7 @@ All the instructions below require you to think along. You are responsible for a
 1. SV calling using [Sniffles](https://github.com/fritzsedlazeck/Sniffles)
 2. SV annotation using [AnnotSV](https://github.com/lgmgeo/AnnotSV)
 3. Population level SV calling using Sniffles
-4. allele frequency SV annotation using [SVAFotate](https://github.com/fakedrtom/SVAFotate)
+4. allele frequency SV annotation using [SVAFotate](https://github.com/fakedrtom/SVAFotate) and [STIX](https://github.com/zhengxinchang/stix)
 5. Low-frequency SV calling using Sniffles
 
 ## Organism
