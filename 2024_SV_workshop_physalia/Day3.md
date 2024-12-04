@@ -113,7 +113,7 @@ bcftools view --no-header hg002_germline.vcf.gz | less -S
 
 #### 1.2.5 Samplot
 ```bash
-bcftools view chr14:19713500-19714400 --regions --no-header hg002_germline.vcf.gz 
+bcftools view --regions chr14:19713500-19714400 --no-header hg002_germline.vcf.gz 
 samplot plot -r day3_data/38.fa.gz  -b day3_data/hg002_chr14_grch38.bam  -c chr14 -s 19713500 -e 19714400 -o example
 ```
 
@@ -162,7 +162,7 @@ AnnotSV  --help
 
 ### 2.2 Filtering interesting hits
 According to AnnoSV [manual](https://lbgi.fr/AnnotSV/Documentation/README.AnnotSV_latest.pdf)
-AnnotSV_ranking_score (field 117): SV ranking score following the 2019 joint consensus
+AnnotSV_ranking_score (field 118): SV ranking score following the 2019 joint consensus
 recommendation of ACMG and ClinGen. Scoring: 
 * pathogenic if ≥0.99
 * likely pathogenic [0.90;0.98]
@@ -171,12 +171,12 @@ recommendation of ACMG and ClinGen. Scoring:
 * benign if ≤-0.99
 
 ```bash
-cat hg002_germline_annotsv.tsv | cut -f 116 | sort | uniq -c | less -S
+cat hg002_germline_annotsv.tsv | cut -f 118 | sort | uniq -c | less -S
 
-cat hg002_germline_annotsv.tsv | awk -F '\t' '{if($117 >= 0.99) print $_ }' | less -S
+cat hg002_germline_annotsv.tsv | awk -F '\t' '{if($118 >= 0.99) print $_ }' | less -S
 ```
 
-Based on the American College of Medical Genetics (ACMG_class, field 118):
+Based on the American College of Medical Genetics (ACMG_class, field 120):
 * class 1 (benign)
 * class 2 (likely benign)
 * class 3 (variant of unknown significance)
@@ -186,7 +186,7 @@ Based on the American College of Medical Genetics (ACMG_class, field 118):
 ```bash
 cat hg002_germline_annotsv.tsv | cut -f 118 | sort | uniq -c
 
-cat hg002_germline_annotsv.tsv | awk -F '\t' '{if($118 == 1) print $_ }' | less -S
+cat hg002_germline_annotsv.tsv | awk -F '\t' '{if($120 == 1) print $_ }' | less -S
 ```
 ### 2.3 bedtools for non-model organisms
 ```bash
@@ -195,6 +195,18 @@ bedtools intersect -a day3_data/genecode43_genes.bed.gz -b hg002_germline.vcf.gz
 # For help
 bedtools intersect --help
 ```
+
+### 2.4 Make plots with Samplot for impacted genes
+```bash
+bedtools intersect -a day3_data/genecode43_genes.bed.gz -b hg002_germline.vcf.gz -f 0.05 > example_genes.bed
+cat examples_use.bed | while read -r line; 
+do 
+   awk '{print "samplot plot -b day3_data/hg002_chr14_grch38.bam -c "$1" -s "$2-1000" -e "$3+1000 " -o examples_"$4}'; 
+done > make_plots_genes.sh
+bash make_plots_genes.sh
+
+```
+
 
 ## Part 3: Population level SV calling with Sniffles
 Now, we are going to investigate SV not in a single sample, but in a collection of samples. The samples can be related (family) or not (population). Sniffles2 has a built in way to merge samples in order to get a **population level VCF.**
@@ -258,6 +270,8 @@ vcf_parse_support.py merge.vcf.gz | sort | uniq -c
 
 
 ### 4.1 Running SVAFotate
+**CAUTION:** Memory usage is high ~20Gb per user
+
 SVAFotate is a tool for annotating structural variant VCFs with population level allele frequency information. This is to be able to distinguish whether a mutation or variant is common or rare in the general population. 
 
 To run SVAFotate, we will load the conda environment 'svafotate' using the following command
