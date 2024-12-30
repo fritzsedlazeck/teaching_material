@@ -48,7 +48,7 @@ nucmer -maxmatch -l 100 -c 500 GCF_000165345.1.fa crypto_BCM2021_v2_min100k_rena
 
 We can now switch over to ([Assemblytics](http://assemblytics.com/)). For simplicity I have created a session for us, otherwise you can try to download and upload your out.delta file. I will show and explain the different plots and outputs available. 
 
-Here is the link: [http://assemblytics.com/analysis.php?code=r2WN5OvWWASgQeOlUg3c](http://assemblytics.com/analysis.php?code=r2WN5OvWWASgQeOlUg3c).
+Here is the link: [http://assemblytics.com/analysis.php?code=MmdXOme5BvAPL3H2UHas](http://assemblytics.com/analysis.php?code=MmdXOme5BvAPL3H2UHas).
 
 To convert the Assemblytics file for SV we will need SURVIVOR:
 ```
