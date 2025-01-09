@@ -38,8 +38,6 @@ Next, we take assembly and reference there: (NOTE! the workshop organizers might
 wget https://www.dropbox.com/scl/fi/02h5mdz7u6lecda2iq2lj/GCF_000165345.1.fa.gz 
 wget https://www.dropbox.com/scl/fi/j874jri96xx2bnzvixw9g/crypto_BCM2021_v2_min100k_rename.fasta.gz
 gunzip *gz
-mv GCF_000165345.1.fa?dl=0 GCF_000165345.1.fa
-mv crypto_BCM2021_v2_min100k_rename.fasta?dl=0 crypto_BCM2021_v2_min100k_rename.fasta
 ```
 
 Now we can initiate the alignment:
