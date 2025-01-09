@@ -35,11 +35,11 @@ As discussed in the lecture, assembly based SV detection is quite comprehensive.
 To begin to call variants we need to first compare the reference to our assembly. 
 Next, we take assembly and reference there: (NOTE! the workshop organizers might have organized the data already for you)
 ```
-wget https://www.dropbox.com/scl/fi/0rgg2ijgbpqc26h418yag/GCF_000165345.1.fa.gz?rlkey=m7j2f7y5t0ukl3b0s39ub85vf&st=1yaz1am3&dl=0
-wget https://www.dropbox.com/scl/fi/0djqnnhzhqan20b8g2nae/crypto_BCM2021_v2_min100k_rename.fasta.gz?rlkey=zat3sb8l2e8udmreveviqyx9c&st=w9wocbe8&dl=0
-mv GCF_000165345.1.fa.gz?rlkey=m7j2f7y5t0ukl3b0s39ub85vf GCF_000165345.1.fa.gz
+wget https://www.dropbox.com/scl/fi/0rgg2ijgbpqc26h418yag/GCF_000165345.1.fa.gz\?rlkey=m7j2f7y5t0ukl3b0s39ub85vf\&st=1yaz1am3\&dl=0
+wget https://www.dropbox.com/scl/fi/0djqnnhzhqan20b8g2nae/crypto_BCM2021_v2_min100k_rename.fasta.gz\?rlkey=zat3sb8l2e8udmreveviqyx9c\&st=w9wocbe8\&dl=0
+mv GCF_000165345.1.fa.gz\?rlkey=m7j2f7y5t0ukl3b0s39ub85vf\&st=1yaz1am3\&dl=0 GCF_000165345.1.fa.gz
 gzip -d GCF_000165345.1.fa.gz
-mv crypto_BCM2021_v2_min100k_rename.fasta.gz\?rlkey\=zat3sb8l2e8udmreveviqyx9c crypto_BCM2021_v2_min100k_rename.fasta.gz
+mv crypto_BCM2021_v2_min100k_rename.fasta.gz\?rlkey=zat3sb8l2e8udmreveviqyx9c\&st=w9wocbe8\&dl=0 crypto_BCM2021_v2_min100k_rename.fasta.gz
 gzip -d crypto_BCM2021_v2_min100k_rename.fasta.gz
 ```
 
@@ -59,8 +59,8 @@ SURVIVOR convertAssemblytics my_favorite_organism.Assemblytics_structural_varian
 
 You can also download that VCF file from here if you had any difficulties:
 ```
-wget https://www.dropbox.com/scl/fi/f7dyinh30tw6t8zgi2dzn/assemblytics.vcf?rlkey=prcv95raqh06950vbipf8b7qj&st=1vxkhpki&dl=0
- mv assemblytics.vcf?rlkey=prcv95raqh06950vbipf8b7qj assemblytics.vcf
+wget https://www.dropbox.com/scl/fi/f7dyinh30tw6t8zgi2dzn/assemblytics.vcf\?rlkey=prcv95raqh06950vbipf8b7qj\&st=1vxkhpki\&dl=0
+ mv assemblytics.vcf\?rlkey=prcv95raqh06950vbipf8b7qj\&st=1vxkhpki\&dl=0 assemblytics.vcf
 ```
 
 Lets count how many SV we could identify: 
@@ -74,8 +74,8 @@ In this part we will use Manta to interpret the signals we can obtain from abnor
 
 Again you might get the file already on your account or you can download from here:
 ```
-wget https://www.dropbox.com/scl/fi/mcpvcmgrwznj4662nbn0s/our_refCrypto_reads.sort.bam?rlkey=ibbww6nfn4ynxlps1s8qfpi4k&st=lfy0iqgf&dl=0
-mv our_refCrypto_reads.sort.bam?rlkey=ibbww6nfn4ynxlps1s8qfpi4k our_refCrypto_reads.sort.bam
+wget https://www.dropbox.com/scl/fi/mcpvcmgrwznj4662nbn0s/our_refCrypto_reads.sort.bam\?rlkey=ibbww6nfn4ynxlps1s8qfpi4k\&st=lfy0iqgf\&dl=0
+mv our_refCrypto_reads.sort.bam\?rlkey=ibbww6nfn4ynxlps1s8qfpi4k\&st=lfy0iqgf\&dl=0 our_refCrypto_reads.sort.bam
 ```
 
 You might need to index the reference and the bam file that we provided to you:
@@ -123,8 +123,8 @@ cp Out_Manta/results/variants/illumina.vcf .
 
 You can get the file here if you had difficulties:
 ```
-wget https://www.dropbox.com/scl/fi/n1uk01z1h04cyqhlwsehy/illumina.vcf?rlkey=8i6twg2e0jjjpmxclst9vxhdc&st=iok39mzh&dl=0
-mv illumina.vcf?rlkey=8i6twg2e0jjjpmxclst9vxhdc illumina.vcf
+wget https://www.dropbox.com/scl/fi/n1uk01z1h04cyqhlwsehy/illumina.vcf\?rlkey=8i6twg2e0jjjpmxclst9vxhdc\&st=iok39mzh\&dl=0
+mv illumina.vcf\?rlkey=8i6twg2e0jjjpmxclst9vxhdc\&st=iok39mzh\&dl=0 illumina.vcf
 ```
 
 Lets count how many SV we could identify: 
@@ -138,8 +138,8 @@ grep -vc '#' illumina.vcf
 Finally we are ready for the Oxford Nanopore detection using sniffles. For this use the "ont_mapped.sort.bam" file that I have previously mapped using minimap2. 
 You might have that file on your account, but if not you can download it here:
 ```
-wget https://www.dropbox.com/scl/fi/xrehpiv5o7xn1ye8oq10l/ont_prev.sort.bam?rlkey=9243h8esv6yayzxatn6iv9d43&st=wr61krhj&dl=0
-mv ont_prev.sort.bam?rlkey=9243h8esv6yayzxatn6iv9d43 ont_prev.sort.bam
+wget https://www.dropbox.com/scl/fi/xrehpiv5o7xn1ye8oq10l/ont_prev.sort.bam\?rlkey=9243h8esv6yayzxatn6iv9d43\&st=wr61krhj\&dl=0
+mv ont_prev.sort.bam\?rlkey=9243h8esv6yayzxatn6iv9d43\&st=wr61krhj\&dl=0 ont_prev.sort.bam
 ```
 
 Using Sniffles v2 this should be a simple command like:
@@ -151,8 +151,8 @@ sniffles -i ont_prev.sort.bam -v sniffles.vcf
 
 You can also download the file from here if you had issues:
 ```
-wget https://www.dropbox.com/scl/fi/r3x01u907c9lg33a99lge/sniffles.vcf?rlkey=gf6yq95psgimto3hutw3vsd3z&st=ppv1vagb&dl=0
-mv sniffles.vcf?rlkey=gf6yq95psgimto3hutw3vsd3z sniffles.vcf
+wget https://www.dropbox.com/scl/fi/r3x01u907c9lg33a99lge/sniffles.vcf\?rlkey=gf6yq95psgimto3hutw3vsd3z\&st=ppv1vagb\&dl=0
+mv sniffles.vcf\?rlkey=gf6yq95psgimto3hutw3vsd3z\&st=ppv1vagb\&dl=0 sniffles.vcf
 ```
 
 Next we can inspect the file with e.g.:
