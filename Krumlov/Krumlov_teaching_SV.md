@@ -35,8 +35,9 @@ As discussed in the lecture, assembly based SV detection is quite comprehensive.
 To begin to call variants we need to first compare the reference to our assembly. 
 Next, we take assembly and reference there: (NOTE! the workshop organizers might have organized the data already for you)
 ```
-wget https://www.dropbox.com/s/uqldg7ir8qzg6ty/GCF_000165345.1.fa?dl=0
-wget https://www.dropbox.com/s/1f9e65k34r80rvd/crypto_BCM2021_v2_min100k_rename.fasta?dl=0 
+wget [https://www.dropbox.com/s/uqldg7ir8qzg6ty/GCF_000165345.1.fa?dl=0](https://www.dropbox.com/scl/fi/02h5mdz7u6lecda2iq2lj/GCF_000165345.1.fa.gz?rlkey=um23htoaazkwkdby5zllnohah&dl=0)
+wget [https://www.dropbox.com/s/1f9e65k34r80rvd/crypto_BCM2021_v2_min100k_rename.fasta?dl=0 ](https://www.dropbox.com/scl/fi/j874jri96xx2bnzvixw9g/crypto_BCM2021_v2_min100k_rename.fasta.gz?rlkey=wfyz13fgdspquerxsaiu4xnfz&dl=0)
+gunzip *gz
 mv GCF_000165345.1.fa?dl=0 GCF_000165345.1.fa
 mv crypto_BCM2021_v2_min100k_rename.fasta?dl=0 crypto_BCM2021_v2_min100k_rename.fasta
 ```
