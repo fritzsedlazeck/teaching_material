@@ -35,8 +35,8 @@ As discussed in the lecture, assembly based SV detection is quite comprehensive.
 To begin to call variants we need to first compare the reference to our assembly. 
 Next, we take assembly and reference there: (NOTE! the workshop organizers might have organized the data already for you)
 ```
-wget [https://www.dropbox.com/s/uqldg7ir8qzg6ty/GCF_000165345.1.fa?dl=0](https://www.dropbox.com/scl/fi/02h5mdz7u6lecda2iq2lj/GCF_000165345.1.fa.gz?rlkey=um23htoaazkwkdby5zllnohah&dl=0)
-wget [https://www.dropbox.com/s/1f9e65k34r80rvd/crypto_BCM2021_v2_min100k_rename.fasta?dl=0 ](https://www.dropbox.com/scl/fi/j874jri96xx2bnzvixw9g/crypto_BCM2021_v2_min100k_rename.fasta.gz?rlkey=wfyz13fgdspquerxsaiu4xnfz&dl=0)
+wget https://www.dropbox.com/scl/fi/02h5mdz7u6lecda2iq2lj/GCF_000165345.1.fa.gz 
+wget https://www.dropbox.com/scl/fi/j874jri96xx2bnzvixw9g/crypto_BCM2021_v2_min100k_rename.fasta.gz
 gunzip *gz
 mv GCF_000165345.1.fa?dl=0 GCF_000165345.1.fa
 mv crypto_BCM2021_v2_min100k_rename.fasta?dl=0 crypto_BCM2021_v2_min100k_rename.fasta
@@ -58,8 +58,7 @@ SURVIVOR convertAssemblytics my_favorite_organism.Assemblytics_structural_varian
 
 You can also download that VCF file from here if you had any difficulties:
 ```
- wget https://www.dropbox.com/s/jm0e6mbrqggwl7g/assemblytics.vcf?dl=0
- mv assemblytics.vcf?dl=0 assemblytics.vcf
+ wget https://www.dropbox.com/scl/fi/cmx77l6gmdmezw7vb0vkp/assemblytics.vcf
 ```
 
 Lets count how many SV we could identify: 
@@ -73,8 +72,7 @@ In this part we will use Manta to interpret the signals we can obtain from abnor
 
 Again you might get the file already on your account or you can download from here:
 ```
-wget https://www.dropbox.com/s/1mjb0tjbtmrcugj/our_refCrypto_reads.sort.bam?dl=0
-mv our_refCrypto_reads.sort.bam?dl=0 our_refCrypto_reads.sort.bam
+wget https://www.dropbox.com/s/1mjb0tjbtmrcugj/our_refCrypto_reads.sort.bam
 ```
 
 You might need to index the reference and the bam file that we provided to you:
@@ -122,8 +120,7 @@ cp Out_Manta/results/variants/illumina.vcf .
 
 You can get the file here if you had difficulties:
 ```
-wget https://www.dropbox.com/s/wcro3nzkird5nx8/illumina.vcf?dl=0
-mv illumina.vcf?dl=0 illumina.vcf
+wget https://www.dropbox.com/s/wcro3nzkird5nx8/illumina.vcf
 ```
 
 Lets count how many SV we could identify: 
@@ -137,8 +134,7 @@ grep -vc '#' illumina.vcf
 Finally we are ready for the Oxford Nanopore detection using sniffles. For this use the "ont_mapped.sort.bam" file that I have previously mapped using minimap2. 
 You might have that file on your account, but if not you can download it here:
 ```
-wget https://www.dropbox.com/s/ttafrqaikst8xea/ont_prev.sort.bam?dl=0 
-mv ont_prev.sort.bam?dl=0 ont_prev.sort.bam
+wget https://www.dropbox.com/s/ttafrqaikst8xea/ont_prev.sort.bam
 ```
 
 Using Sniffles v2 this should be a simple command like:
@@ -150,8 +146,7 @@ sniffles -i ont_prev.sort.bam -v sniffles.vcf
 
 You can also download the file from here if you had issues:
 ```
-wget https://www.dropbox.com/s/7fpgnoq818mxsnk/sniffles.vcf?dl=0
-mv sniffles.vcf?dl=0 sniffles.vcf
+wget https://www.dropbox.com/s/7fpgnoq818mxsnk/sniffles.vcf
 ```
 
 Next we can inspect the file with e.g.:
