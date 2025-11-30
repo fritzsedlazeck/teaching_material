@@ -12,7 +12,7 @@ Rice University
 ## Day 3
 
 ## Physalia-Courses
-This is part of the Physalia-Courses lectured in Dec 2024
+This is part of the Physalia-Courses lectured in Dec 2025
 https://www.physalia-courses.org/
 
 ### Goals of this module
@@ -28,7 +28,7 @@ All the instructions below require you to think along. You are responsible for a
 1. SV calling using [Sniffles](https://github.com/fritzsedlazeck/Sniffles)
 2. SV annotation using [AnnotSV](https://github.com/lgmgeo/AnnotSV)
 3. Population level SV calling using Sniffles
-4. allele frequency SV annotation using [SVAFotate](https://github.com/fakedrtom/SVAFotate) and [STIX](https://github.com/zhengxinchang/stix)
+4. Allele frequency SV annotation using [SVAFotate](https://github.com/fakedrtom/SVAFotate) and [STIX](https://github.com/zhengxinchang/stix)
 5. Low-frequency SV calling using Sniffles
 
 ## Organism
@@ -40,8 +40,7 @@ You can read more about [GIAB here](https://www.nist.gov/programs-projects/genom
 
 ## Conda 
 ```bash
-source /home/ubuntu/share/conda_init.sh
-conda activate lr
+conda activate SVW_lr
 ```
 
 ## Part 1: Long-read based SV detection: Sniffles
@@ -53,9 +52,9 @@ For this exercise we will use the reference genome GRCh37. To begin to call vari
 
 
 ```bash
+cd
 mkdir day3
 cd day3
-ln -T /home/ubuntu/share/data/day3 -s day3_data
 ```
 
 ### 1.2 Running Sniffles2
@@ -64,23 +63,22 @@ To run Sniffles2, we will load the conda environment 'long' using the following 
 We will use Sniffles to detect the signals we can obtain from abnormally mapped long-reads. To run Sniffles2, execute the following command:
 ```bash
 sniffles \
-   --input day3_data/hg002_chr14_grch38.bam \
+   --input /home/ubuntu/Share/physalia_SV_workshop_data/human/HG002_2025q1_30x_chr21.bam \
    --vcf hg002_germline.vcf.gz \
-   --snf hg002_germline.snf \
-   --regions day3_data/chr14.bed \
-   --reference day3_data/38.fa.gz \
+   --contig chr21 \
+   --reference /home/ubuntu/Share/physalia_SV_workshop_data/human/grch38.fasta.gz \
    --threads 1
 ```
 
 #### 1.2.1 Sniffles2 command explained
 Long read alignment file in bam format used as input:
-`--input hg002.bam`
+`--input HG002_2025q1_30x_chr21.bam`
 
 Output file in 'Variant Call Format' used to store the Structural Variants that we detect:
 `--vcf hg002_germline.vcf.gz`
 
 Reference genome used during the alignment in order to have deletion sequences in the results:
-`--reference day3_data/38.fa.gz`
+`--reference /home/ubuntu/Share/physalia_SV_workshop_data/human/grch38.fasta.gz`
 
 Number of logical threads used during the analysis (parallelization):
 `--threads 1`
@@ -113,8 +111,19 @@ bcftools view --no-header hg002_germline.vcf.gz | less -S
 
 #### 1.2.5 Samplot
 ```bash
-bcftools view --regions chr14:19713500-19714400 --no-header hg002_germline.vcf.gz 
-samplot plot -r day3_data/38.fa.gz  -b day3_data/hg002_chr14_grch38.bam  -c chr14 -s 19713500 -e 19714400 -o example
+bcftools view --regions chr21:13443893-13446748 --no-header hg002_germline.vcf.gz 
+samplot plot \
+   -r /home/ubuntu/Share/physalia_SV_workshop_data/human/grch38.fasta.gz \
+   -b /home/ubuntu/Share/physalia_SV_workshop_data/human/HG002_2025q1_30x_chr21.bam \
+   -c chr21 -s 13443893 -e 13446748 -o example1
+
+
+bcftools view --regions chr21:14087289-14090144 --no-header hg002_germline.vcf.gz 
+samplot plot \
+   -r /home/ubuntu/Share/physalia_SV_workshop_data/human/grch38.fasta.gz \
+   -b /home/ubuntu/Share/physalia_SV_workshop_data/human/HG002_2025q1_30x_chr21.bam \
+   -c chr21 -s 14087289 -e 14090144 -o example2
+
 ```
 
 ## Part 2: SV Annotation with AnnotSV
@@ -190,7 +199,8 @@ cat hg002_germline_annotsv.tsv | awk -F '\t' '{if($120 == 1) print $_ }' | less 
 ```
 ### 2.3 bedtools for non-model organisms
 ```bash
-bedtools intersect -a day3_data/genecode43_genes.bed.gz -b hg002_germline.vcf.gz -f 0.05
+bedtools intersect -a /home/ubuntu/Share/physalia_SV_workshop_data/human/genecode43_genes.bed.gz \
+   -b hg002_germline.vcf.gz -f 0.05
 
 # For help
 bedtools intersect --help
@@ -198,10 +208,12 @@ bedtools intersect --help
 
 ### 2.4 Make plots with Samplot for impacted genes
 ```bash
-bedtools intersect -a day3_data/genecode43_genes.bed.gz -b hg002_germline.vcf.gz -f 0.05 > example_genes.bed
+bedtools intersect \
+   -a /home/ubuntu/Share/physalia_SV_workshop_data/human/genecode43_genes.bed.gz \
+   -b hg002_germline.vcf.gz -f 0.05 > example_genes.bed
 cat examples_use.bed | while read -r line; 
 do 
-   awk '{print "samplot plot -b day3_data/hg002_chr14_grch38.bam -c "$1" -s "$2-1000" -e "$3+1000 " -o examples_"$4}'; 
+   awk '{print "samplot plot -b /home/ubuntu/Share/physalia_SV_workshop_data/human/hg002_chr14_grch38.bam -c "$1" -s "$2-1000" -e "$3+1000 " -o examples_"$4}'; 
 done > make_plots_genes.sh
 bash make_plots_genes.sh
 
@@ -218,37 +230,37 @@ For this exercise, we have already called SVs with Sniffles2 and produced a spec
 
 ```bash
 # input
-ls day3_data/hg002.snf
-ls day3_data/hg003.snf
-ls day3_data/hg004.snf
+ls /home/ubuntu/Share/physalia_SV_workshop_data/human/*.snf
 ```
 
 ### 3.2 Running Sniffles2
 To run Sniffles2, we will load the conda environment 'long' using the following command
 
 ```bash
-conda activate lr
+conda activate SVW_lr
 ```
 
 To run Sniffles2 population calling, execute the following command:
 
 ```bash
 sniffles \
-   --input day3_data/hg002.snf day3_data/hg003.snf day3_data/hg004.snf \
+   --input /home/ubuntu/Share/physalia_SV_workshop_data/human/hg002.snf \
+           /home/ubuntu/Share/physalia_SV_workshop_data/human/hg003.snf \
+           /home/ubuntu/Share/physalia_SV_workshop_data/human/hg004.snf \
    --vcf merge.vcf.gz \
-   --reference day3_data/38.fa.gz \
+   --reference /home/ubuntu/Share/physalia_SV_workshop_data/human/grch38.fasta.gz \
    --threads 2
 ```
 
 #### 3.2.1 Sniffles2 command explained
 Two intermediary files (produced with sniffles, as in the previous example) that contain all the Structural Variant candidates. We will use this file to call SV in both samples at the same time.
-`--input  day3_data/hg002.snf  day3_data/hg003.snf  day3_data/hg004.snf`
+`--input  hg002.snf  hg003.snf  hg004.snf`
 
 Output file in 'Variant Call Format' used to store the Structural Variants that we detect:
 `--vcf merge.vcf.gz`
 
 Reference genome used during the alignment in order to have deletion sequences in the results:
-`--reference 38.fasta.gz`
+`--reference grch38.fasta.gz`
 
 Number of logical threads used during the analysis (parallelization):
 `--threads 1`
@@ -277,7 +289,7 @@ SVAFotate is a tool for annotating structural variant VCFs with population level
 To run SVAFotate, we will load the conda environment 'svafotate' using the following command
 
 ```bash
-conda activate svafotate
+conda activate SVW_svafotate
 ```
 
 Next lets use the following command to annotate the VCF from exercise 3:
@@ -286,7 +298,7 @@ Next lets use the following command to annotate the VCF from exercise 3:
 svafotate annotate \
    --vcf merge.vcf.gz \
    --out merge_annotation_svafotate.vcf.gz \
-   --bed day3_data/pop_freq/population_grch38.bed.gz
+   --bed /home/ubuntu/Share/physalia_SV_workshop_data/human/SVAFotate_core_SV_popAFs.GRCh38.v4.1.bed.gz
 ```
 
 #### 4.1.1 SVAFotate command explained
@@ -296,7 +308,7 @@ Input SV VCF from a previous analysis: `--vcf merge.vcf.gz`
 
 Output VCF that will contain population AF annotations: `--out merge_annotation_svafotate.vcf.gz`
 
-Population AF: `--bed day3_data/pop_freq/population_grch38.bed.gz`
+Population AF: `--bed SVAFotate_core_SV_popAFs.GRCh38.v4.1.bed.gz`
 
 #### 4.1.2 Let's check a couple of SVs
 ```bash
@@ -309,32 +321,13 @@ To get the help menu from svafotate we can type:
 svafotate -h
 ```
 
-
 ### 4.2 Running STIX
 STIX is long-read based annotation resource which indexes SV-informative long-reads themselves, can thus be easily extended and accurately annotate all SV types including insertions.
-
-To run STIX, we will load the conda environment 'lr' using the following command
-
-```bash
-conda activate lr
-```
-
-We are annotating only chromosome 14 for speed
-```bash
-bcftools view --regions chr14 merge.vcf.gz | bgzip -c > merge_chr14.vcf.gz
-bcftools index --tbi merge_chr14.vcf.gz
-```
-
-Next lets use the following command to annotate the VCF file with STIX:
-
-```bash
-bash day3_data/run_stix.sh
-```
 
 
 #### 4.2.2 Let's check a couple of SVs
 ```bash
-bcftools view --no-header merge_chr14_ann_stix.vcf | cut -f 1,2,3,8,10- | sed -e "s/;STIX/\tSTIX/g" | cut -f 1,2,3,5,6,9- | less -S
+bcftools view --no-header merge_ann_stix.vcf | cut -f 1,2,3,8,10- | sed -e "s/;STIX/\tSTIX/g" | cut -f 1,2,3,5,6,9- | less -S
 ```
 
 
@@ -349,22 +342,22 @@ For htis exercise, we are going to use Sniffles2 to investigate low-frequency ty
 To run Sniffles2, we will load the conda environment 'long' using the following command
 
 ```bash
-conda activate lr
+conda activate SVW_lr
 ```
 
 To run Sniffles2, execute the following command:
 ```bash
 sniffles \
-   --input day3_data/hg002_chr14_grch38.bam \
-   --vcf hg002_mosaic.vcf.gz \
-   --mosaic \
-   --reference day3_data/38.fa.gz \
+   --input /home/ubuntu/Share/physalia_SV_workshop_data/human/hapmap_smaht_hifi_chr21.bam \
+   --vcf mims_mosaic.vcf.gz \
+   --mosaic-include-germline \
+   --reference /home/ubuntu/Share/physalia_SV_workshop_data/human/grch38.fasta.gz \
    --threads 1
 ```
 
 ### 5.2 Sniffles2 command explained
 Long read alignment file in bam format used as input:
-`--input day3_data/hg002_chr14_grch38.bam`
+`--input /home/ubuntu/Share/physalia_SV_workshop_data/human/hapmap_smaht_hifi_chr21.bam`
 
 Output file in 'Variant Call Format' used to store the Structural Variants that we detect:
 `--vcf hg002_mosaic.vcf.gz`
@@ -373,7 +366,7 @@ Flag parameter that indicates that we will be calling low frequency Structural V
 `--mosaic`
 
 Reference genome used during the alignment in order to have deletion sequences in the results:
-`--reference day3_data/38.fa.gz`
+`--reference /home/ubuntu/Share/physalia_SV_workshop_data/human/grch38.fasta.gz `
 
 Number of logical threads used during the analysis (parallelization):
 `--threads 1`
@@ -382,8 +375,8 @@ Number of logical threads used during the analysis (parallelization):
 ### 5.3 Number of variants detected
 Now that Sniffles has finalized, let us count how many SV we could identify:
 ```bash
-bcftools view --no-header hg002_mosaic.vcf.gz | wc -l
+bcftools view --no-header mims_mosaic.vcf.gz | wc -l
 
-bcftools view --no-header hg002_mosaic.vcf.gz | less -S
+bcftools view --no-header mims_mosaic.vcf.gz | less -S
 ```
 

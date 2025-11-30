@@ -11,7 +11,7 @@ Rice University
 ***
 
 ## Physalia-Courses
-This is part of the Physalia-Courses lectured in Dec 2024
+This is part of the Physalia-Courses lectured in Dec 2025
 https://www.physalia-courses.org/
 
 ## Goals of this module
@@ -35,8 +35,7 @@ We will study this sample of Cryptosporidium compared to the previously availabl
 
 ## Conda 
 ```bash
-source /home/ubuntu/share/conda_init.sh
-conda activate sr
+conda activate SVW_sr
 ```
 
 
@@ -46,9 +45,9 @@ In this part we will use Manta to interpret the signals we can obtain from abnor
 Again you might get the file already on your account or you can download from here:
 ```bash
 # make a directory
+cd
 mkdir day2
 cd day2
-ln -T /home/ubuntu/share/data/day2 -s day2_data
 
 ```
 
@@ -59,19 +58,26 @@ It contains both the reads and the reference genome
 First we need to align the reads to a reference genome
 
 ```bash
-bwa-mem2 mem -t 2 day2_data/GCF_000165345.1.fa day2_data/short-reads/raw_reads/reads_1.fq.gz day2_data/short-reads/raw_reads/reads_2.fq.gz | samtools view -hb | samtools sort -m 2G - > aligned_reads_refCrypto.sort.bam
+bwa-mem2 mem -t 2 \
+    /home/ubuntu/Share/physalia_SV_workshop_data/GCF_000165345.1.fa \
+    /home/ubuntu/Share/physalia_SV_workshop_data/short-reads/raw_reads/reads_1.fq.gz \
+    /home/ubuntu/Share/physalia_SV_workshop_data/short-reads/raw_reads/reads_2.fq.gz | \
+    samtools view -hb | samtools sort -m 2G - > aligned_reads_refCrypto.sort.bam
 samtools index aligned_reads_refCrypto.sort.bam
 ```
 
 Next we initiate the Manta run:
 ```bash
-configManta.py --bam=aligned_reads_refCrypto.sort.bam --referenceFasta=day2_data/GCF_000165345.1.fa  --runDir=Out_Manta
+configManta.py --bam=aligned_reads_refCrypto.sort.bam \
+    --referenceFasta=/home/ubuntu/Share/physalia_SV_workshop_data/GCF_000165345.1.fa  \
+    --runDir=Out_Manta
 ```
 
 
 If you had eny issues with the alignment you can run manta with this pre-aligned reads
 ```bash
-configManta.py --bam=day2_data/short-reads/our_refCrypto_reads.sort.bam --referenceFasta=day2_data/GCF_000165345.1.fa  --runDir=Out_Manta
+configManta.py --bam=/home/ubuntu/Share/physalia_SV_workshop_data/short-reads/our_refCrypto_reads.sort.bam \
+    --referenceFasta=/home/ubuntu/Share/physalia_SV_workshop_data/GCF_000165345.1.fa  --runDir=Out_Manta
 ```
 
 This should just take seconds as it initiates the folder structure and specifies for the subsequent process to use our mapped reads and our reference file. In addition, we specify the output to be written in `Out_Manta`
@@ -99,16 +105,13 @@ less illumina.vcf
 ```
 
 You can get the file here if you had difficulties:
-```bash
-ln -T day2_data/short-reads/illumina.vcf -s illumina_results.vcf
-```
 
 Lets count how many SV we could identify: 
 ```bash
-grep -vc '#' illumina.vcf
+grep -vc '#' /home/ubuntu/Share/physalia_SV_workshop_data/short-reads/illumina.vcf
 
 # or if you linked the results file
-grep -vc '#' illumina_results.vcf
+grep -vc '#' /home/ubuntu/Share/physalia_SV_workshop_data/short-reads/illumina_results.vcf
 ```
 
 Let us all discuss the different variant types and how they are reported! 
@@ -118,13 +121,15 @@ Let us all discuss the different variant types and how they are reported!
 Finally we are ready for the Oxford Nanopore detection using sniffles. For this use the "ont_mapped.sort.bam" file that I have previously mapped using minimap2. 
 You might have that file on your account, but if not you can download it here:
 ```bash
-conda activate lr
+conda activate SVW_lr
 ```
 
 We are now going to align the long reads with minimap2
 
 ```bash
-minimap2 -ax map-ont -t 2 day2_data/GCF_000165345.1.fa  day2_data/ont-reads/raw_reads_ont.fastq.gz | samtools sort -m 2G - > aligned_ONT_reads_Crypto.sort.bam
+minimap2 -ax map-ont -t 2 /home/ubuntu/Share/physalia_SV_workshop_data/GCF_000165345.1.fa  \
+    /home/ubuntu/Share/physalia_SV_workshop_data/ont-reads/raw_reads_ont.fastq.gz | \
+    samtools sort -m 2G - > aligned_ONT_reads_Crypto.sort.bam
 samtools index aligned_ONT_reads_Crypto.sort.bam
 ```
 
@@ -136,7 +141,7 @@ sniffles -i aligned_ONT_reads_Crypto.sort.bam -v sniffles.vcf
 
 In case you had issues with the long read alignment, you ca use this example
 ```bash
-sniffles -i day2_data/ont-reads/ont_prev.sort.bam -v sniffles.vcf
+sniffles -i /home/ubuntu/Share/physalia_SV_workshop_data/ont-reads/ont_prev.sort.bam -v sniffles.vcf
 ```
 
 To check the number of SVs detected by Sniffles:
@@ -149,7 +154,7 @@ How many SV did you detect?
 
 You can also check the file from here if you had issues:
 ```bash
-less -S day2_data/ont-reads/sniffles.vcf
+less -S /home/ubuntu/Share/physalia_SV_workshop_data/ont-reads/sniffles.vcf
 ```
 
 ## Part 4: Structural Variant comparison
@@ -160,7 +165,7 @@ For SURVIVOR we want to use the merge option. Before doing this, the merge optio
 ```bash
 ls sniffles.vcf > vcf_files
 ls illumina.vcf >> vcf_files
-ls day2_data/assembly/assemblytics.vcf >> vcf_files
+ls /home/ubuntu/Share/physalia_SV_workshop_data/assembly/assemblytics.vcf >> vcf_files
 ```
 
 Next we can initiate the compare with 100bp wobble and requiring that we are only merging with SV type agreement. Furthermore, we will only take variants into account with 50bp+. 
