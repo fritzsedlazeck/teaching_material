@@ -58,7 +58,7 @@ It contains both the reads and the reference genome
 First we need to align the reads to a reference genome
 
 ```bash
-bwa-mem2 mem -t 2 \
+bwa-mem2 mem -t 1 \
     /home/ubuntu/Share/physalia_SV_workshop_data/GCF_000165345.1.fa \
     /home/ubuntu/Share/physalia_SV_workshop_data/short-reads/raw_reads/reads_1.fq.gz \
     /home/ubuntu/Share/physalia_SV_workshop_data/short-reads/raw_reads/reads_2.fq.gz | \
@@ -68,6 +68,7 @@ samtools index aligned_reads_refCrypto.sort.bam
 
 Next we initiate the Manta run:
 ```bash
+conda activate manta
 configManta.py --bam=aligned_reads_refCrypto.sort.bam \
     --referenceFasta=/home/ubuntu/Share/physalia_SV_workshop_data/GCF_000165345.1.fa  \
     --runDir=Out_Manta
@@ -84,10 +85,10 @@ This should just take seconds as it initiates the folder structure and specifies
 
 ### 2. Run the analysis:
 ```bash
-python2 Out_Manta/runWorkflow.py -j 2 -m local -g 6
+python2 Out_Manta/runWorkflow.py -j 1 -m local -g 4
 ```
 
-This will launch the Manta pipeline that we previously configured. `-j` specifies the number of CPU threads (2 in our case), `-m` local indicates that it should not try to run things on different nodes or instances and `-g 30` specifies the available memory for the process in GB.
+This will launch the Manta pipeline that we previously configured. `-j` specifies the number of CPU threads (1 in our case), `-m` local indicates that it should not try to run things on different nodes or instances and `-g 30` specifies the available memory for the process in GB.
 
 Manta now searches for abnormal paired-end reads and split-reads across our mapped reads. These will be analyzed together and clustered to identify SV in these samples. After ~2-3 minutes you should see that the program has finished.
 
@@ -127,7 +128,7 @@ conda activate SVW_lr
 We are now going to align the long reads with minimap2
 
 ```bash
-minimap2 -ax map-ont -t 2 /home/ubuntu/Share/physalia_SV_workshop_data/GCF_000165345.1.fa  \
+minimap2 -ax map-ont -t 1 /home/ubuntu/Share/physalia_SV_workshop_data/GCF_000165345.1.fa  \
     /home/ubuntu/Share/physalia_SV_workshop_data/ont-reads/raw_reads_ont.fastq.gz | \
     samtools sort -m 2G - > aligned_ONT_reads_Crypto.sort.bam
 samtools index aligned_ONT_reads_Crypto.sort.bam
@@ -136,7 +137,7 @@ samtools index aligned_ONT_reads_Crypto.sort.bam
 Using Sniffles2 this should be a simple command like:
 
 ```bash
-sniffles -i aligned_ONT_reads_Crypto.sort.bam -v sniffles.vcf
+sniffles -i aligned_ONT_reads_Crypto.sort.bam -v sniffles.vcf -t 1
 ```
 
 In case you had issues with the long read alignment, you ca use this example

@@ -180,7 +180,7 @@ recommendation of ACMG and ClinGen. Scoring:
 * benign if ≤-0.99
 
 ```bash
-cat hg002_germline_annotsv.tsv | cut -f 118 | sort | uniq -c | less -S
+cat hg002_germline_annotsv.tsv | cut -f 118 | sort | uniq -c 
 
 cat hg002_germline_annotsv.tsv | awk -F '\t' '{if($118 >= 0.99) print $_ }' | less -S
 ```
@@ -199,8 +199,11 @@ cat hg002_germline_annotsv.tsv | awk -F '\t' '{if($120 == 1) print $_ }' | less 
 ```
 ### 2.3 bedtools for non-model organisms
 ```bash
-bedtools intersect -a /home/ubuntu/Share/physalia_SV_workshop_data/human/genecode43_genes.bed.gz \
-   -b hg002_germline.vcf.gz -f 0.05
+bedtools intersect  \
+    -a /home/ubuntu/Share/physalia_SV_workshop_data/human/genecode43_genes.bed.gz \
+    -b hg002_germline.vcf.gz \
+    -f 0.01 -wao | \
+    grep -vP "\t-1" | cut -f 1-4,5,6,12,14 | less -S
 
 # For help
 bedtools intersect --help
@@ -210,11 +213,12 @@ bedtools intersect --help
 ```bash
 bedtools intersect \
    -a /home/ubuntu/Share/physalia_SV_workshop_data/human/genecode43_genes.bed.gz \
-   -b hg002_germline.vcf.gz -f 0.05 > example_genes.bed
-cat examples_use.bed | while read -r line; 
+   -b hg002_germline.vcf.gz -f 0.01 > example_genes.bed
+
+cat example_genes.bed | while read -r line; 
 do 
-   awk '{print "samplot plot -b /home/ubuntu/Share/physalia_SV_workshop_data/human/hg002_chr14_grch38.bam -c "$1" -s "$2-1000" -e "$3+1000 " -o examples_"$4}'; 
-done > make_plots_genes.sh
+   awk '{print "samplot plot -b /home/ubuntu/Share/physalia_SV_workshop_data/human/HG002_2025q1_30x_chr21.bam -c "$1" -s "$2-1000" -e "$3+1000 " -o examples_"$4}'; 
+done | cut -d "," -f 1 | awk '{print $_".jpg"}' > make_plots_genes.sh
 bash make_plots_genes.sh
 
 ```
@@ -249,7 +253,7 @@ sniffles \
            /home/ubuntu/Share/physalia_SV_workshop_data/human/hg004.snf \
    --vcf merge.vcf.gz \
    --reference /home/ubuntu/Share/physalia_SV_workshop_data/human/grch38.fasta.gz \
-   --threads 2
+   --threads 1
 ```
 
 #### 3.2.1 Sniffles2 command explained
@@ -352,7 +356,7 @@ sniffles \
    --vcf mims_mosaic.vcf.gz \
    --mosaic-include-germline \
    --reference /home/ubuntu/Share/physalia_SV_workshop_data/human/grch38.fasta.gz \
-   --threads 1
+   --contig chr21 --threads 1
 ```
 
 ### 5.2 Sniffles2 command explained
@@ -377,6 +381,6 @@ Now that Sniffles has finalized, let us count how many SV we could identify:
 ```bash
 bcftools view --no-header mims_mosaic.vcf.gz | wc -l
 
-bcftools view --no-header mims_mosaic.vcf.gz | less -S
+bcftools view --no-header mims_mosaic.vcf.gz | cut -f 1,2,3,8,10 | less -S
 ```
 
