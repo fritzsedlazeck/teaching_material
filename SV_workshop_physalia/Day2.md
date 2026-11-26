@@ -11,7 +11,7 @@ Rice University
 ***
 
 ## Physalia-Courses
-This is part of the Physalia-Courses lectured in Dec 2025
+This is part of the Physalia-Courses lectured in Dec 2026
 https://www.physalia-courses.org/
 
 ## Goals of this module
@@ -35,23 +35,13 @@ We will study this sample of Cryptosporidium compared to the previously availabl
 
 ## Conda 
 ```bash
-conda activate SVW_sr
+source /home/ubuntu/miniconda3/etc/profile.d/conda.sh
+conda activate svw
 ```
 
 
 ## Part 2: Illumina based SV detection 
 In this part we will use Manta to interpret the signals we can obtain from abnormally mapped paired end Illumina reads. 
-
-Again you might get the file already on your account or you can download from here:
-```bash
-# make a directory
-cd
-mkdir day2
-cd day2
-
-```
-
-It contains both the reads and the reference genome
 
 
 ### 1. Align the reads to the reference and configure manta:
@@ -59,33 +49,38 @@ First we need to align the reads to a reference genome
 
 ```bash
 bwa-mem2 mem -t 1 \
-    /home/ubuntu/Share/physalia_SV_workshop_data/GCF_000165345.1.fa \
-    /home/ubuntu/Share/physalia_SV_workshop_data/short-reads/raw_reads/reads_1.fq.gz \
-    /home/ubuntu/Share/physalia_SV_workshop_data/short-reads/raw_reads/reads_2.fq.gz | \
+    /home/ubuntu/physalia_SV_workshop_data/GCF_000165345.1.fa \
+    /home/ubuntu/physalia_SV_workshop_data/short-reads/raw_reads/reads_1.fq.gz \
+    /home/ubuntu/physalia_SV_workshop_data/short-reads/raw_reads/reads_2.fq.gz | \
     samtools view -hb | samtools sort -m 2G - > aligned_reads_refCrypto.sort.bam
 samtools index aligned_reads_refCrypto.sort.bam
 ```
 
-Next we initiate the Manta run:
+First, we load the conda environment for manta:
 ```bash
+source /home/ubuntu/miniconda3/etc/profile.d/conda.sh
 conda activate manta
+```
+
+Next we initiate the Manta run:
+```
 configManta.py --bam=aligned_reads_refCrypto.sort.bam \
-    --referenceFasta=/home/ubuntu/Share/physalia_SV_workshop_data/GCF_000165345.1.fa  \
+    --referenceFasta=/home/ubuntu/physalia_SV_workshop_data/GCF_000165345.1.fa  \
     --runDir=Out_Manta
 ```
 
 
 If you had eny issues with the alignment you can run manta with this pre-aligned reads
 ```bash
-configManta.py --bam=/home/ubuntu/Share/physalia_SV_workshop_data/short-reads/our_refCrypto_reads.sort.bam \
-    --referenceFasta=/home/ubuntu/Share/physalia_SV_workshop_data/GCF_000165345.1.fa  --runDir=Out_Manta
+configManta.py --bam=/home/ubuntu/physalia_SV_workshop_data/short-reads/our_refCrypto_reads.sort.bam \
+    --referenceFasta=/home/ubuntu/physalia_SV_workshop_data/GCF_000165345.1.fa  --runDir=Out_Manta
 ```
 
 This should just take seconds as it initiates the folder structure and specifies for the subsequent process to use our mapped reads and our reference file. In addition, we specify the output to be written in `Out_Manta`
 
 ### 2. Run the analysis:
 ```bash
-python2 Out_Manta/runWorkflow.py -j 1 -m local -g 4
+python2 Out_Manta/runWorkflow.py -j 2 -m local -g 8
 ```
 
 This will launch the Manta pipeline that we previously configured. `-j` specifies the number of CPU threads (1 in our case), `-m` local indicates that it should not try to run things on different nodes or instances and `-g 30` specifies the available memory for the process in GB.
@@ -101,18 +96,18 @@ As you can see, we have multiple VCF files. These represent the different stages
 
 Let us open quickly the output of the highest quality SV files:
 ```bash
-gzip -dc Out_Manta/results/variants/diploidSV.vcf.gz > illumina.vcf
-less illumina.vcf
+bcftools view Out_Manta/results/variants/diploidSV.vcf.gz > illumina.vcf
+bcftools view --no-header illumina.vcf | less -S
 ```
 
 You can get the file here if you had difficulties:
 
 Lets count how many SV we could identify: 
 ```bash
-grep -vc '#' /home/ubuntu/Share/physalia_SV_workshop_data/short-reads/illumina.vcf
+bcftools view --no-header /home/ubuntu/physalia_SV_workshop_data/short-reads/illumina.vcf | wc -l
 
 # or if you linked the results file
-grep -vc '#' /home/ubuntu/Share/physalia_SV_workshop_data/short-reads/illumina_results.vcf
+bcftools view --no-header /home/ubuntu/physalia_SV_workshop_data/short-reads/illumina_results.vcf | wc -l
 ```
 
 Let us all discuss the different variant types and how they are reported! 
@@ -122,14 +117,15 @@ Let us all discuss the different variant types and how they are reported!
 Finally we are ready for the Oxford Nanopore detection using sniffles. For this use the "ont_mapped.sort.bam" file that I have previously mapped using minimap2. 
 You might have that file on your account, but if not you can download it here:
 ```bash
-conda activate SVW_lr
+source /home/ubuntu/miniconda3/etc/profile.d/conda.sh
+conda activate svw
 ```
 
 We are now going to align the long reads with minimap2
 
 ```bash
-minimap2 -ax map-ont -t 1 /home/ubuntu/Share/physalia_SV_workshop_data/GCF_000165345.1.fa  \
-    /home/ubuntu/Share/physalia_SV_workshop_data/ont-reads/raw_reads_ont.fastq.gz | \
+minimap2 -ax map-ont -t 1 /home/ubuntu/physalia_SV_workshop_data/GCF_000165345.1.fa  \
+    /home/ubuntu/physalia_SV_workshop_data/ont-reads/raw_reads_ont.fastq.gz | \
     samtools sort -m 2G - > aligned_ONT_reads_Crypto.sort.bam
 samtools index aligned_ONT_reads_Crypto.sort.bam
 ```
@@ -137,17 +133,17 @@ samtools index aligned_ONT_reads_Crypto.sort.bam
 Using Sniffles2 this should be a simple command like:
 
 ```bash
-sniffles -i aligned_ONT_reads_Crypto.sort.bam -v sniffles.vcf -t 1
+sniffles -i aligned_ONT_reads_Crypto.sort.bam -v sniffles.vcf
 ```
 
 In case you had issues with the long read alignment, you ca use this example
 ```bash
-sniffles -i /home/ubuntu/Share/physalia_SV_workshop_data/ont-reads/ont_prev.sort.bam -v sniffles.vcf
+sniffles -i /home/ubuntu/physalia_SV_workshop_data/ont-reads/ont_prev.sort.bam -v sniffles.vcf
 ```
 
 To check the number of SVs detected by Sniffles:
 ```bash
-grep -vc '#' sniffles.vcf
+bcftools view --no-header sniffles.vcf | wc -l
 ```
 
 How many SV did you detect? 
@@ -155,8 +151,14 @@ How many SV did you detect?
 
 You can also check the file from here if you had issues:
 ```bash
-less -S /home/ubuntu/Share/physalia_SV_workshop_data/ont-reads/sniffles.vcf
+bcftools view --no-header /home/ubuntu/physalia_SV_workshop_data/ont-reads/sniffles.vcf | wc -l
 ```
+
+Now les see what type of variants we detectr
+```bash
+bcftools view --no-header sniffles.vcf | less -S
+```
+
 
 ## Part 4: Structural Variant comparison
 
@@ -164,9 +166,7 @@ Now that we generated Assembly, Illumina  and ONT based SV calls it is time to c
 
 For SURVIVOR we want to use the merge option. Before doing this, the merge option requires a file including all paths and VCF files that you want to compare. Thus, we generate the file like this:
 ```bash
-ls sniffles.vcf > vcf_files
-ls illumina.vcf >> vcf_files
-ls /home/ubuntu/Share/physalia_SV_workshop_data/assembly/assemblytics.vcf >> vcf_files
+ls assemblytics.vcf illumina.vcf sniffles.vcf > vcf_files
 ```
 
 Next we can initiate the compare with 100bp wobble and requiring that we are only merging with SV type agreement. Furthermore, we will only take variants into account with 50bp+. 
@@ -175,15 +175,7 @@ SURVIVOR merge vcf_files 100 1 1 0 0 50 sample_merged.vcf
 ```
 Lets check how good/bad the overlap is:
 ```bash
-vcf_parse_support.py sample_merged.vcf | sort | uniq -c 
-
-```
-
-You can also use regular expressions
-
-```bash
-perl -ne 'print "$1\n" if /SUPP_VEC=([^,;]+)/'  sample_merged.vcf | sort | uniq -c 
-
+echo "count: assemblytics,illumina,sniffles" && bcftools query -f '%INFO/SUPP_VEC' sample_merged.vcf 2> /dev/null | sort | uniq -c | awk '{print $1":\t"$2}'
 ```
 
 As you can see you will get the pattern and the number of times the pattern occurs. The first number is the number of times it can be observed in the VCF file. The 2nd number is the pattern (0 or 1 depending if it was observed or not) 

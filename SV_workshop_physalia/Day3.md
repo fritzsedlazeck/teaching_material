@@ -12,7 +12,7 @@ Rice University
 ## Day 3
 
 ## Physalia-Courses
-This is part of the Physalia-Courses lectured in Dec 2025
+This is part of the Physalia-Courses lectured in Dec 2026
 https://www.physalia-courses.org/
 
 ### Goals of this module
@@ -40,7 +40,8 @@ You can read more about [GIAB here](https://www.nist.gov/programs-projects/genom
 
 ## Conda 
 ```bash
-conda activate SVW_lr
+source /home/ubuntu/miniconda3/etc/profile.d/conda.sh
+conda activate svw
 ```
 
 ## Part 1: Long-read based SV detection: Sniffles
@@ -48,14 +49,8 @@ As discussed in the lecture, assembly based SV detection is quite comprehensive.
 
 
 ### 1.1 Get the data
-For this exercise we will use the reference genome GRCh37. To begin to call variants we need the reads to be aligned to a reference genome. In the following path you will find the read alignment for Chromosome 14 of human sample HG002.
+For this exercise we will use the reference genome GRCh37. To begin to call variants we need the reads to be aligned to a reference genome. 
 
-
-```bash
-cd
-mkdir day3
-cd day3
-```
 
 ### 1.2 Running Sniffles2
 To run Sniffles2, we will load the conda environment 'long' using the following command
@@ -63,10 +58,10 @@ To run Sniffles2, we will load the conda environment 'long' using the following 
 We will use Sniffles to detect the signals we can obtain from abnormally mapped long-reads. To run Sniffles2, execute the following command:
 ```bash
 sniffles \
-   --input /home/ubuntu/Share/physalia_SV_workshop_data/human/HG002_2025q1_30x_chr21.bam \
+   --input /home/ubuntu/physalia_SV_workshop_data/human/HG002_2025q1_30x_chr21.bam \
    --vcf hg002_germline.vcf.gz \
    --contig chr21 \
-   --reference /home/ubuntu/Share/physalia_SV_workshop_data/human/grch38.fasta.gz \
+   --reference /home/ubuntu/physalia_SV_workshop_data/human/grch38.fasta.gz \
    --threads 1
 ```
 
@@ -78,7 +73,7 @@ Output file in 'Variant Call Format' used to store the Structural Variants that 
 `--vcf hg002_germline.vcf.gz`
 
 Reference genome used during the alignment in order to have deletion sequences in the results:
-`--reference /home/ubuntu/Share/physalia_SV_workshop_data/human/grch38.fasta.gz`
+`--reference /home/ubuntu/physalia_SV_workshop_data/human/grch38.fasta.gz`
 
 Number of logical threads used during the analysis (parallelization):
 `--threads 1`
@@ -112,16 +107,17 @@ bcftools view --no-header hg002_germline.vcf.gz | less -S
 #### 1.2.5 Samplot
 ```bash
 bcftools view --regions chr21:13443893-13446748 --no-header hg002_germline.vcf.gz 
+bcftools view --regions chr21:13443893-13446748 --no-header hg002_germline.vcf.gz | cut -f 1-3,6-
 samplot plot \
-   -r /home/ubuntu/Share/physalia_SV_workshop_data/human/grch38.fasta.gz \
-   -b /home/ubuntu/Share/physalia_SV_workshop_data/human/HG002_2025q1_30x_chr21.bam \
+   -r /home/ubuntu/physalia_SV_workshop_data/human/grch38.fasta.gz \
+   -b /home/ubuntu/physalia_SV_workshop_data/human/HG002_2025q1_30x_chr21.bam \
    -c chr21 -s 13443893 -e 13446748 -o example1
 
 
-bcftools view --regions chr21:14087289-14090144 --no-header hg002_germline.vcf.gz 
+bcftools view --regions chr21:14087289-14090144 --no-header hg002_germline.vcf.gz | cut -f 1-3,6-
 samplot plot \
-   -r /home/ubuntu/Share/physalia_SV_workshop_data/human/grch38.fasta.gz \
-   -b /home/ubuntu/Share/physalia_SV_workshop_data/human/HG002_2025q1_30x_chr21.bam \
+   -r /home/ubuntu/physalia_SV_workshop_data/human/grch38.fasta.gz \
+   -b /home/ubuntu/physalia_SV_workshop_data/human/HG002_2025q1_30x_chr21.bam \
    -c chr21 -s 14087289 -e 14090144 -o example2
 
 ```
@@ -200,7 +196,7 @@ cat hg002_germline_annotsv.tsv | awk -F '\t' '{if($120 == 1) print $_ }' | less 
 ### 2.3 bedtools for non-model organisms
 ```bash
 bedtools intersect  \
-    -a /home/ubuntu/Share/physalia_SV_workshop_data/human/genecode43_genes.bed.gz \
+    -a /home/ubuntu/physalia_SV_workshop_data/human/genecode43_genes.bed.gz \
     -b hg002_germline.vcf.gz \
     -f 0.01 -wao | \
     grep -vP "\t-1" | cut -f 1-4,5,6,12,14 | less -S
@@ -212,12 +208,12 @@ bedtools intersect --help
 ### 2.4 Make plots with Samplot for impacted genes
 ```bash
 bedtools intersect \
-   -a /home/ubuntu/Share/physalia_SV_workshop_data/human/genecode43_genes.bed.gz \
+   -a /home/ubuntu/physalia_SV_workshop_data/human/genecode43_genes.bed.gz \
    -b hg002_germline.vcf.gz -f 0.01 > example_genes.bed
 
 cat example_genes.bed | while read -r line; 
 do 
-   awk '{print "samplot plot -b /home/ubuntu/Share/physalia_SV_workshop_data/human/HG002_2025q1_30x_chr21.bam -c "$1" -s "$2-1000" -e "$3+1000 " -o examples_"$4}'; 
+   awk '{print "samplot plot -b /home/ubuntu/physalia_SV_workshop_data/human/HG002_2025q1_30x_chr21.bam -c "$1" -s "$2-1000" -e "$3+1000 " -o examples_"$4}'; 
 done | cut -d "," -f 1 | awk '{print $_".jpg"}' > make_plots_genes.sh
 bash make_plots_genes.sh
 
@@ -234,25 +230,26 @@ For this exercise, we have already called SVs with Sniffles2 and produced a spec
 
 ```bash
 # input
-ls /home/ubuntu/Share/physalia_SV_workshop_data/human/*.snf
+ls /home/ubuntu/physalia_SV_workshop_data/human/*.snf
 ```
 
 ### 3.2 Running Sniffles2
 To run Sniffles2, we will load the conda environment 'long' using the following command
 
 ```bash
-conda activate SVW_lr
+source /home/ubuntu/miniconda3/etc/profile.d/conda.sh
+conda activate svw
 ```
 
 To run Sniffles2 population calling, execute the following command:
 
 ```bash
 sniffles \
-   --input /home/ubuntu/Share/physalia_SV_workshop_data/human/hg002.snf \
-           /home/ubuntu/Share/physalia_SV_workshop_data/human/hg003.snf \
-           /home/ubuntu/Share/physalia_SV_workshop_data/human/hg004.snf \
+   --input /home/ubuntu/physalia_SV_workshop_data/human/hg002.snf \
+           /home/ubuntu/physalia_SV_workshop_data/human/hg003.snf \
+           /home/ubuntu/physalia_SV_workshop_data/human/hg004.snf \
    --vcf merge.vcf.gz \
-   --reference /home/ubuntu/Share/physalia_SV_workshop_data/human/grch38.fasta.gz \
+   --reference /home/ubuntu/physalia_SV_workshop_data/human/grch38.fasta.gz \
    --threads 1
 ```
 
@@ -293,7 +290,8 @@ SVAFotate is a tool for annotating structural variant VCFs with population level
 To run SVAFotate, we will load the conda environment 'svafotate' using the following command
 
 ```bash
-conda activate SVW_svafotate
+source /home/ubuntu/miniconda3/etc/profile.d/conda.sh
+conda activate svafotate
 ```
 
 Next lets use the following command to annotate the VCF from exercise 3:
@@ -302,7 +300,7 @@ Next lets use the following command to annotate the VCF from exercise 3:
 svafotate annotate \
    --vcf merge.vcf.gz \
    --out merge_annotation_svafotate.vcf.gz \
-   --bed /home/ubuntu/Share/physalia_SV_workshop_data/human/SVAFotate_core_SV_popAFs.GRCh38.v4.1.bed.gz
+   --bed /home/ubuntu/physalia_SV_workshop_data/human/SVAFotate_core_SV_popAFs.GRCh38.v4.1.bed.gz
 ```
 
 #### 4.1.1 SVAFotate command explained
@@ -346,22 +344,23 @@ For htis exercise, we are going to use Sniffles2 to investigate low-frequency ty
 To run Sniffles2, we will load the conda environment 'long' using the following command
 
 ```bash
-conda activate SVW_lr
+source /home/ubuntu/miniconda3/etc/profile.d/conda.sh
+conda activate svw
 ```
 
 To run Sniffles2, execute the following command:
 ```bash
 sniffles \
-   --input /home/ubuntu/Share/physalia_SV_workshop_data/human/hapmap_smaht_hifi_chr21.bam \
+   --input /home/ubuntu/physalia_SV_workshop_data/human/hapmap_smaht_hifi_chr21.bam \
    --vcf mims_mosaic.vcf.gz \
    --mosaic-include-germline \
-   --reference /home/ubuntu/Share/physalia_SV_workshop_data/human/grch38.fasta.gz \
+   --reference /home/ubuntu/physalia_SV_workshop_data/human/grch38.fasta.gz \
    --contig chr21 --threads 1
 ```
 
 ### 5.2 Sniffles2 command explained
 Long read alignment file in bam format used as input:
-`--input /home/ubuntu/Share/physalia_SV_workshop_data/human/hapmap_smaht_hifi_chr21.bam`
+`--input /home/ubuntu/physalia_SV_workshop_data/human/hapmap_smaht_hifi_chr21.bam`
 
 Output file in 'Variant Call Format' used to store the Structural Variants that we detect:
 `--vcf hg002_mosaic.vcf.gz`
@@ -370,7 +369,7 @@ Flag parameter that indicates that we will be calling low frequency Structural V
 `--mosaic`
 
 Reference genome used during the alignment in order to have deletion sequences in the results:
-`--reference /home/ubuntu/Share/physalia_SV_workshop_data/human/grch38.fasta.gz `
+`--reference /home/ubuntu/physalia_SV_workshop_data/human/grch38.fasta.gz `
 
 Number of logical threads used during the analysis (parallelization):
 `--threads 1`

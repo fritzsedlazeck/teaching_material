@@ -11,7 +11,7 @@ Rice University
 ***
 
 ## Physalia-Courses
-This is part of the Physalia-Courses lectured in Dec 2025
+This is part of the Physalia-Courses lectured in Dec 2026
 https://www.physalia-courses.org/
 
 
@@ -45,6 +45,7 @@ You will need to do this everytime you open a new terminal!
 
 If you don't see (base) next yo your username then type
 ```bash
+source /home/ubuntu/miniconda3/etc/profile.d/conda.sh
 conda activate base
 ```
 
@@ -55,29 +56,23 @@ As discussed in the lecture, assembly based SV detection is quite comprehensive.
 To begin to call variants we need to first compare the reference to our assembly. 
 Next, we take assembly and reference there: (NOTE! the workshop organizers might have organized the data already for you)
 
-```bash
-# day 1 data
-cd
-mkdir day1
-cd day1
 
-```
-
-Now we need to initiate the conda environment `sr` (short reads)
+First,  we need to initiate the conda environment `svw` (structural varinat workshop)
 ```bash
-conda activate SVW_sr
+source /home/ubuntu/miniconda3/etc/profile.d/conda.sh
+conda activate svw
 ```
 
 Now we can initiate the alignment:
 ```bash
-nucmer -maxmatch -l 100 -c 500 /home/ubuntu/Share/physalia_SV_workshop_data/GCF_000165345.1.fa /home/ubuntu/Share/physalia_SV_workshop_data/assembly/crypto_BCM2021_v2_min100k_rename.fasta --prefix mummer_out
+nucmer -maxmatch -l 100 -c 500 /home/ubuntu/physalia_SV_workshop_data/GCF_000165345.1.fa /home/ubuntu/physalia_SV_workshop_data/assembly/crypto_BCM2021_v2_min100k_rename.fasta --prefix mummer_out
 ```
 
 We can now switch over to Assemblytics. For simplicity had created a session for us, moreover the web application recently was sutdown, but we have saved a copy for you to see. The command line tool still works. 
 ```bash
 # assemblytics <delta_file> <output_prefix> <unique_anchor_length> <min_variant_size> <max_variant_size>
 
-assemblytics mummer_out.delta  output_assemblytics 10000  50  10000
+assemblytics -d mummer_out.delta  -o output_assemblytics -l 10000 -min  50 -max 10000
 ```
 
 To convert the Assemblytics file for SV we will need SURVIVOR: We want to discard all SV impacting less than 50 bp. 
@@ -87,20 +82,20 @@ SURVIVOR convertAssemblytics output_assemblytics.Assemblytics_structural_variant
 
 Lets count how many SV we could identify: 
 ```bash
-grep -vc '#' assemblytics.vcf
+bcftools view --no-header assemblytics.vcf | wc -l
 ```
 
 You can look at all the SVs:
 ```bash
-grep -v '#'  assemblytics.vcf
+bcftools view --no-header assemblytics.vcf
 ```
 
 
 In case you were not able to run Assemblytics, you can also see that VCF file from here if you had any difficulties:
 ```bash
-grep -vc '#' /home/ubuntu/Share/physalia_SV_workshop_data/assembly/assemblytics.vcf
+bcftools view --no-header /home/ubuntu/physalia_SV_workshop_data/assembly/assemblytics.vcf | wc -l
 
-grep -v '#'  /home/ubuntu/Share/physalia_SV_workshop_data/assembly/assemblytics.vcf
+bcftools view --no-header /home/ubuntu/physalia_SV_workshop_data/assembly/assemblytics.vcf
 ```
 
 Congratulations we now have SV calls from Assemblytics. Lets discuss these results together!
@@ -115,11 +110,12 @@ Before using Dipcall make yourself familiar with the command line options! Here 
 
 First, we will need to initate our alignment and variant calling step. Note that here Dipcall only writes the commands in one file given your input parameters. 
 ```bash
-conda activate SVW_lr
+source /home/ubuntu/miniconda3/etc/profile.d/conda.sh
+conda activate svw
 run-dipcall  -t 2 -a outputdipcall \
-    /home/ubuntu/Share/physalia_SV_workshop_data/GCF_000165345.1.fa \
-    /home/ubuntu/Share/physalia_SV_workshop_data/assembly/crypto_BCM2021_v2_min100k_rename.fasta \
-    /home/ubuntu/Share/physalia_SV_workshop_data/assembly/crypto_BCM2021_v2_min100k_rename.fasta > prefix.mak
+    /home/ubuntu/physalia_SV_workshop_data/GCF_000165345.1.fa \
+    /home/ubuntu/physalia_SV_workshop_data/assembly/crypto_BCM2021_v2_min100k_rename.fasta \
+    /home/ubuntu/physalia_SV_workshop_data/assembly/crypto_BCM2021_v2_min100k_rename.fasta > prefix.mak
 ```
 
 Thus, next we need to execute this commad to actually run the comparson and obtain the variant calls:
@@ -128,6 +124,7 @@ make -j2 -f prefix.mak
 
 ```
 
+```bash
+bcftools view --no-header outputdipcall.dip.vcf.gz | less -S
 
-
-
+```
